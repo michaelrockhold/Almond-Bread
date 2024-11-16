@@ -1,0 +1,647 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2EB6F49B2CE9533C0082D354 /* Almond_BreadApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F49A2CE9533C0082D354 /* Almond_BreadApp.swift */; };
+		2EB6F49D2CE9533C0082D354 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F49C2CE9533C0082D354 /* Persistence.swift */; };
+		2EB6F4A02CE9533C0082D354 /* Almond_Bread.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F49E2CE9533C0082D354 /* Almond_Bread.xcdatamodeld */; };
+		2EB6F4A22CE9533C0082D354 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4A12CE9533C0082D354 /* ContentView.swift */; };
+		2EB6F4A42CE953450082D354 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EB6F4A32CE953450082D354 /* Assets.xcassets */; };
+		2EB6F4A82CE953450082D354 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EB6F4A72CE953450082D354 /* Preview Assets.xcassets */; };
+		2EB6F4B32CE953460082D354 /* Almond_BreadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4B22CE953460082D354 /* Almond_BreadTests.swift */; };
+		2EB6F4BD2CE953460082D354 /* Almond_BreadUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4BC2CE953460082D354 /* Almond_BreadUITests.swift */; };
+		2EB6F4BF2CE953460082D354 /* Almond_BreadUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4BE2CE953460082D354 /* Almond_BreadUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2EB6F4AF2CE953460082D354 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2EB6F48F2CE9533B0082D354 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2EB6F4962CE9533B0082D354;
+			remoteInfo = "Almond Bread";
+		};
+		2EB6F4B92CE953460082D354 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2EB6F48F2CE9533B0082D354 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2EB6F4962CE9533B0082D354;
+			remoteInfo = "Almond Bread";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2EB6F4972CE9533C0082D354 /* Almond Bread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Almond Bread.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EB6F49A2CE9533C0082D354 /* Almond_BreadApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Almond_BreadApp.swift; sourceTree = "<group>"; };
+		2EB6F49C2CE9533C0082D354 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		2EB6F49F2CE9533C0082D354 /* Almond_Bread.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Almond_Bread.xcdatamodel; sourceTree = "<group>"; };
+		2EB6F4A12CE9533C0082D354 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2EB6F4A32CE953450082D354 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2EB6F4A52CE953450082D354 /* Almond_Bread.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Almond_Bread.entitlements; sourceTree = "<group>"; };
+		2EB6F4A72CE953450082D354 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2EB6F4A92CE953450082D354 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2EB6F4AE2CE953460082D354 /* Almond BreadTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Almond BreadTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EB6F4B22CE953460082D354 /* Almond_BreadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Almond_BreadTests.swift; sourceTree = "<group>"; };
+		2EB6F4B82CE953460082D354 /* Almond BreadUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Almond BreadUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EB6F4BC2CE953460082D354 /* Almond_BreadUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Almond_BreadUITests.swift; sourceTree = "<group>"; };
+		2EB6F4BE2CE953460082D354 /* Almond_BreadUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Almond_BreadUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2EB6F4942CE9533B0082D354 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EB6F4AB2CE953460082D354 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EB6F4B52CE953460082D354 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2EB6F48E2CE9533B0082D354 = {
+			isa = PBXGroup;
+			children = (
+				2EB6F4992CE9533C0082D354 /* Almond Bread */,
+				2EB6F4B12CE953460082D354 /* Almond BreadTests */,
+				2EB6F4BB2CE953460082D354 /* Almond BreadUITests */,
+				2EB6F4982CE9533C0082D354 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2EB6F4982CE9533C0082D354 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2EB6F4972CE9533C0082D354 /* Almond Bread.app */,
+				2EB6F4AE2CE953460082D354 /* Almond BreadTests.xctest */,
+				2EB6F4B82CE953460082D354 /* Almond BreadUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2EB6F4992CE9533C0082D354 /* Almond Bread */ = {
+			isa = PBXGroup;
+			children = (
+				2EB6F49A2CE9533C0082D354 /* Almond_BreadApp.swift */,
+				2EB6F49C2CE9533C0082D354 /* Persistence.swift */,
+				2EB6F4A12CE9533C0082D354 /* ContentView.swift */,
+				2EB6F4A32CE953450082D354 /* Assets.xcassets */,
+				2EB6F4A52CE953450082D354 /* Almond_Bread.entitlements */,
+				2EB6F4A92CE953450082D354 /* Info.plist */,
+				2EB6F49E2CE9533C0082D354 /* Almond_Bread.xcdatamodeld */,
+				2EB6F4A62CE953450082D354 /* Preview Content */,
+			);
+			path = "Almond Bread";
+			sourceTree = "<group>";
+		};
+		2EB6F4A62CE953450082D354 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2EB6F4A72CE953450082D354 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2EB6F4B12CE953460082D354 /* Almond BreadTests */ = {
+			isa = PBXGroup;
+			children = (
+				2EB6F4B22CE953460082D354 /* Almond_BreadTests.swift */,
+			);
+			path = "Almond BreadTests";
+			sourceTree = "<group>";
+		};
+		2EB6F4BB2CE953460082D354 /* Almond BreadUITests */ = {
+			isa = PBXGroup;
+			children = (
+				2EB6F4BC2CE953460082D354 /* Almond_BreadUITests.swift */,
+				2EB6F4BE2CE953460082D354 /* Almond_BreadUITestsLaunchTests.swift */,
+			);
+			path = "Almond BreadUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2EB6F4962CE9533B0082D354 /* Almond Bread */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2EB6F4C22CE953460082D354 /* Build configuration list for PBXNativeTarget "Almond Bread" */;
+			buildPhases = (
+				2EB6F4932CE9533B0082D354 /* Sources */,
+				2EB6F4942CE9533B0082D354 /* Frameworks */,
+				2EB6F4952CE9533B0082D354 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Almond Bread";
+			productName = "Almond Bread";
+			productReference = 2EB6F4972CE9533C0082D354 /* Almond Bread.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2EB6F4AD2CE953460082D354 /* Almond BreadTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2EB6F4C52CE953460082D354 /* Build configuration list for PBXNativeTarget "Almond BreadTests" */;
+			buildPhases = (
+				2EB6F4AA2CE953460082D354 /* Sources */,
+				2EB6F4AB2CE953460082D354 /* Frameworks */,
+				2EB6F4AC2CE953460082D354 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2EB6F4B02CE953460082D354 /* PBXTargetDependency */,
+			);
+			name = "Almond BreadTests";
+			productName = "Almond BreadTests";
+			productReference = 2EB6F4AE2CE953460082D354 /* Almond BreadTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2EB6F4B72CE953460082D354 /* Almond BreadUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2EB6F4C82CE953460082D354 /* Build configuration list for PBXNativeTarget "Almond BreadUITests" */;
+			buildPhases = (
+				2EB6F4B42CE953460082D354 /* Sources */,
+				2EB6F4B52CE953460082D354 /* Frameworks */,
+				2EB6F4B62CE953460082D354 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2EB6F4BA2CE953460082D354 /* PBXTargetDependency */,
+			);
+			name = "Almond BreadUITests";
+			productName = "Almond BreadUITests";
+			productReference = 2EB6F4B82CE953460082D354 /* Almond BreadUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2EB6F48F2CE9533B0082D354 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					2EB6F4962CE9533B0082D354 = {
+						CreatedOnToolsVersion = 15.2;
+					};
+					2EB6F4AD2CE953460082D354 = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = 2EB6F4962CE9533B0082D354;
+					};
+					2EB6F4B72CE953460082D354 = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = 2EB6F4962CE9533B0082D354;
+					};
+				};
+			};
+			buildConfigurationList = 2EB6F4922CE9533B0082D354 /* Build configuration list for PBXProject "Almond Bread" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2EB6F48E2CE9533B0082D354;
+			productRefGroup = 2EB6F4982CE9533C0082D354 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2EB6F4962CE9533B0082D354 /* Almond Bread */,
+				2EB6F4AD2CE953460082D354 /* Almond BreadTests */,
+				2EB6F4B72CE953460082D354 /* Almond BreadUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2EB6F4952CE9533B0082D354 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2EB6F4A82CE953450082D354 /* Preview Assets.xcassets in Resources */,
+				2EB6F4A42CE953450082D354 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EB6F4AC2CE953460082D354 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EB6F4B62CE953460082D354 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2EB6F4932CE9533B0082D354 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2EB6F49B2CE9533C0082D354 /* Almond_BreadApp.swift in Sources */,
+				2EB6F4A02CE9533C0082D354 /* Almond_Bread.xcdatamodeld in Sources */,
+				2EB6F4A22CE9533C0082D354 /* ContentView.swift in Sources */,
+				2EB6F49D2CE9533C0082D354 /* Persistence.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EB6F4AA2CE953460082D354 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2EB6F4B32CE953460082D354 /* Almond_BreadTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EB6F4B42CE953460082D354 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2EB6F4BF2CE953460082D354 /* Almond_BreadUITestsLaunchTests.swift in Sources */,
+				2EB6F4BD2CE953460082D354 /* Almond_BreadUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2EB6F4B02CE953460082D354 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2EB6F4962CE9533B0082D354 /* Almond Bread */;
+			targetProxy = 2EB6F4AF2CE953460082D354 /* PBXContainerItemProxy */;
+		};
+		2EB6F4BA2CE953460082D354 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2EB6F4962CE9533B0082D354 /* Almond Bread */;
+			targetProxy = 2EB6F4B92CE953460082D354 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2EB6F4C02CE953460082D354 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2EB6F4C12CE953460082D354 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		2EB6F4C32CE953460082D354 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Almond Bread/Almond_Bread.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Almond Bread/Preview Content\"";
+				DEVELOPMENT_TEAM = MYU6NE7WY6;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Almond Bread/Info.plist";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.appel-rockhold.Almond-Bread";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2EB6F4C42CE953460082D354 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Almond Bread/Almond_Bread.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Almond Bread/Preview Content\"";
+				DEVELOPMENT_TEAM = MYU6NE7WY6;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Almond Bread/Info.plist";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.appel-rockhold.Almond-Bread";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2EB6F4C62CE953460082D354 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MYU6NE7WY6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.appel-rockhold.Almond-BreadTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Almond Bread.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Almond Bread";
+			};
+			name = Debug;
+		};
+		2EB6F4C72CE953460082D354 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MYU6NE7WY6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.appel-rockhold.Almond-BreadTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Almond Bread.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Almond Bread";
+			};
+			name = Release;
+		};
+		2EB6F4C92CE953460082D354 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MYU6NE7WY6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.appel-rockhold.Almond-BreadUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Almond Bread";
+			};
+			name = Debug;
+		};
+		2EB6F4CA2CE953460082D354 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MYU6NE7WY6;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.appel-rockhold.Almond-BreadUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Almond Bread";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2EB6F4922CE9533B0082D354 /* Build configuration list for PBXProject "Almond Bread" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EB6F4C02CE953460082D354 /* Debug */,
+				2EB6F4C12CE953460082D354 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2EB6F4C22CE953460082D354 /* Build configuration list for PBXNativeTarget "Almond Bread" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EB6F4C32CE953460082D354 /* Debug */,
+				2EB6F4C42CE953460082D354 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2EB6F4C52CE953460082D354 /* Build configuration list for PBXNativeTarget "Almond BreadTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EB6F4C62CE953460082D354 /* Debug */,
+				2EB6F4C72CE953460082D354 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2EB6F4C82CE953460082D354 /* Build configuration list for PBXNativeTarget "Almond BreadUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EB6F4C92CE953460082D354 /* Debug */,
+				2EB6F4CA2CE953460082D354 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2EB6F49E2CE9533C0082D354 /* Almond_Bread.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2EB6F49F2CE9533C0082D354 /* Almond_Bread.xcdatamodel */,
+			);
+			currentVersion = 2EB6F49F2CE9533C0082D354 /* Almond_Bread.xcdatamodel */;
+			path = Almond_Bread.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 2EB6F48F2CE9533B0082D354 /* Project object */;
+}
