@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E9947DF2CF10B36004E6BF1 /* MyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9947DE2CF10B36004E6BF1 /* MyView.swift */; };
+		2E9947E12CF11769004E6BF1 /* AdjustSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9947E02CF11768004E6BF1 /* AdjustSettingsView.swift */; };
+		2E9947E32CF146B8004E6BF1 /* ImageInfo+initializers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9947E22CF146B8004E6BF1 /* ImageInfo+initializers.swift */; };
 		2EB6F49B2CE9533C0082D354 /* Almond_BreadApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F49A2CE9533C0082D354 /* Almond_BreadApp.swift */; };
 		2EB6F49D2CE9533C0082D354 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F49C2CE9533C0082D354 /* Persistence.swift */; };
 		2EB6F4A02CE9533C0082D354 /* Almond_Bread.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F49E2CE9533C0082D354 /* Almond_Bread.xcdatamodeld */; };
@@ -16,6 +19,9 @@
 		2EB6F4B32CE953460082D354 /* Almond_BreadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4B22CE953460082D354 /* Almond_BreadTests.swift */; };
 		2EB6F4BD2CE953460082D354 /* Almond_BreadUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4BC2CE953460082D354 /* Almond_BreadUITests.swift */; };
 		2EB6F4BF2CE953460082D354 /* Almond_BreadUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4BE2CE953460082D354 /* Almond_BreadUITestsLaunchTests.swift */; };
+		2EB6F4CC2CEABBBA0082D354 /* AlmondBreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4CB2CEABBBA0082D354 /* AlmondBreadView.swift */; };
+		2EB6F4CE2CED08EF0082D354 /* Pixel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4CD2CED08EF0082D354 /* Pixel.swift */; };
+		2EB6F4D02CED0CA20082D354 /* Plotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4CF2CED0CA20082D354 /* Plotter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +42,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2E9947DE2CF10B36004E6BF1 /* MyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyView.swift; sourceTree = "<group>"; };
+		2E9947E02CF11768004E6BF1 /* AdjustSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustSettingsView.swift; sourceTree = "<group>"; };
+		2E9947E22CF146B8004E6BF1 /* ImageInfo+initializers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageInfo+initializers.swift"; sourceTree = "<group>"; };
 		2EB6F4972CE9533C0082D354 /* Almond Bread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Almond Bread.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EB6F49A2CE9533C0082D354 /* Almond_BreadApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Almond_BreadApp.swift; sourceTree = "<group>"; };
 		2EB6F49C2CE9533C0082D354 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -50,6 +59,9 @@
 		2EB6F4B82CE953460082D354 /* Almond BreadUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Almond BreadUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EB6F4BC2CE953460082D354 /* Almond_BreadUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Almond_BreadUITests.swift; sourceTree = "<group>"; };
 		2EB6F4BE2CE953460082D354 /* Almond_BreadUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Almond_BreadUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		2EB6F4CB2CEABBBA0082D354 /* AlmondBreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlmondBreadView.swift; sourceTree = "<group>"; };
+		2EB6F4CD2CED08EF0082D354 /* Pixel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pixel.swift; sourceTree = "<group>"; };
+		2EB6F4CF2CED0CA20082D354 /* Plotter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plotter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,13 +113,19 @@
 			isa = PBXGroup;
 			children = (
 				2EB6F49A2CE9533C0082D354 /* Almond_BreadApp.swift */,
+				2EB6F4CD2CED08EF0082D354 /* Pixel.swift */,
 				2EB6F49C2CE9533C0082D354 /* Persistence.swift */,
 				2EB6F4A12CE9533C0082D354 /* ContentView.swift */,
+				2EB6F4CB2CEABBBA0082D354 /* AlmondBreadView.swift */,
+				2EB6F4CF2CED0CA20082D354 /* Plotter.swift */,
+				2E9947DE2CF10B36004E6BF1 /* MyView.swift */,
 				2EB6F4A32CE953450082D354 /* Assets.xcassets */,
 				2EB6F4A52CE953450082D354 /* Almond_Bread.entitlements */,
 				2EB6F4A92CE953450082D354 /* Info.plist */,
 				2EB6F49E2CE9533C0082D354 /* Almond_Bread.xcdatamodeld */,
 				2EB6F4A62CE953450082D354 /* Preview Content */,
+				2E9947E02CF11768004E6BF1 /* AdjustSettingsView.swift */,
+				2E9947E22CF146B8004E6BF1 /* ImageInfo+initializers.swift */,
 			);
 			path = "Almond Bread";
 			sourceTree = "<group>";
@@ -267,10 +285,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E9947E32CF146B8004E6BF1 /* ImageInfo+initializers.swift in Sources */,
+				2E9947DF2CF10B36004E6BF1 /* MyView.swift in Sources */,
 				2EB6F49B2CE9533C0082D354 /* Almond_BreadApp.swift in Sources */,
+				2EB6F4CC2CEABBBA0082D354 /* AlmondBreadView.swift in Sources */,
 				2EB6F4A02CE9533C0082D354 /* Almond_Bread.xcdatamodeld in Sources */,
 				2EB6F4A22CE9533C0082D354 /* ContentView.swift in Sources */,
+				2EB6F4CE2CED08EF0082D354 /* Pixel.swift in Sources */,
+				2EB6F4D02CED0CA20082D354 /* Plotter.swift in Sources */,
 				2EB6F49D2CE9533C0082D354 /* Persistence.swift in Sources */,
+				2E9947E12CF11769004E6BF1 /* AdjustSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,10 +469,10 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.appel-rockhold.Almond-Bread";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -484,10 +508,10 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.7;
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.appel-rockhold.Almond-Bread";
 				PRODUCT_NAME = "$(TARGET_NAME)";

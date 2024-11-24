@@ -10,11 +10,16 @@ import SwiftUI
 @main
 struct Almond_BreadApp: App {
     let persistenceController = PersistenceController.shared
-
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
+#if os(macOS)
+        .commands {
+            SidebarCommands()
+        }
+#endif
     }
 }

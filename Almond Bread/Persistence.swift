@@ -14,8 +14,12 @@ struct PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+            let _ = ImageInfo(context: viewContext,
+                              x: -0.7412067031270126, y: -0.1207678370473447,
+                              pixelWidth: 1.0940668476076224e-11,
+                              width: 800,
+                              height: 600,
+                              colorScheme: .classic)
         }
         do {
             try viewContext.save()

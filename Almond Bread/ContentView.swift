@@ -12,18 +12,19 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \ImageInfo.name, ascending: true)],
         animation: .default)
-    private var items: FetchedResults<Item>
+    private var imageInfos: FetchedResults<ImageInfo>
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(items) { item in
+                ForEach(imageInfos) { imageInfo in
                     NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+                        AlmondBreadView()
+//                        MyView()
                     } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
+                        Text(imageInfo.name ?? "Untitled")
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -36,18 +37,23 @@ struct ContentView: View {
 #endif
                 ToolbarItem {
                     Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                        Label("New Image", systemImage: "plus")
                     }
                 }
             }
-            Text("Select an item")
+            Text("Select a set of image parameters")
         }
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+            let _ = ImageInfo(context: viewContext,
+                              x: -0.7412067031270126,
+                              y: -0.1207678370473447,
+                              pixelWidth: 1.0940668476076224e-11,
+                              width: 800,
+                              height: 600,
+                              colorScheme: .classic)
 
             do {
                 try viewContext.save()
@@ -62,7 +68,7 @@ struct ContentView: View {
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+            offsets.map { imageInfos[$0] }.forEach(viewContext.delete)
 
             do {
                 try viewContext.save()

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "E496ECC8-FC28-4AC1-9777-520500032245"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "17E54564-DBED-4FA7-AD8E-A1C06C9AB26D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Almond Bread/MyView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "didDismiss()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "17E54564-DBED-4FA7-AD8E-A1C06C9AB26D - 54aa72b266ad37c1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Almond_Bread.MyView.didDismiss() -&gt; ()"
+                  moduleName = "Almond Bread"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mr/Developer/Projects/Almond%20Bread/Almond%20Bread/MyView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "37"
+                  endingLineNumber = "37"
+                  offsetFromSymbolStart = "35">
+               </Location>
+               <Location
+                  uuid = "17E54564-DBED-4FA7-AD8E-A1C06C9AB26D - 54aa72b266ad37a2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Almond_Bread.MyView.didDismiss() -&gt; ()"
+                  moduleName = "Almond Bread"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mr/Developer/Projects/Almond%20Bread/Almond%20Bread/MyView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "38"
+                  endingLineNumber = "38"
+                  offsetFromSymbolStart = "52">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
