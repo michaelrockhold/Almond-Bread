@@ -62,13 +62,11 @@ struct Plotter {
         // Source: Paul Bourke
         static var CLASSIC: [ClrControl] {
             [
-                ClrControl.init(0.00, 0.0, 0.0, 1.0),
+                ClrControl(0.00, 0.0, 0.0, 1.0),
                 ClrControl(0.25, 0, 1, 1),
                 ClrControl(0.50, 0, 1, 0),
                 ClrControl(0.75, 1, 1, 0),
                 ClrControl(1.00, 1, 0, 0),
-
-                ClrControl(999.0, 0, 0, 0)
             ]
         }
 
@@ -81,7 +79,6 @@ struct Plotter {
                 ClrControl(0.642500, 1.000000, 0.666667, 0.000000),
                 ClrControl(0.857500, 0.000000, 0.007843, 0.000000),
                 ClrControl(1.000000, 0.400000, 0.400000, 1.000000),
-                ClrControl(999.0, 0, 0, 0)
             ]
         };
 
@@ -104,7 +101,7 @@ struct Plotter {
                                    palette: [Double],
                                    setPixel: (Int, Int, (Double, Double, Double))->Void) {
 
-        func color(for pr: PointResult) -> Double {
+        func ratio(for pr: PointResult) -> Double {
             let log2 = log(2.0)
 
             if pr.count < maxIter  {
@@ -132,7 +129,7 @@ struct Plotter {
         }
 
         for (i,pr) in results.enumerated() {
-            setPixel(i % self.width, i / self.width, colourFor(ratio: color(for: pr), colorScheme: colorScheme))
+            setPixel(i % self.width, i / self.width, colourFor(ratio: ratio(for: pr), colorScheme: colorScheme))
         }
     }
 
@@ -157,31 +154,30 @@ struct Plotter {
         if (ratio >= 1) { return (0.0, 0.0, 0.0) }     // return white; The set itself is black
         if (ratio <= 0) { ratio = 0.0001 } // Should never happen w/o FP errors.
 
-        var n = 0
-        var or = 0.0
-        var og = 0.0
-        var ob = 0.0
-        var octrl = 0.0
+        // First iteration needed for setting o{ctrl,r,g,b}.
+        let colorPoint0 = colorScheme.first!
+        var octrl = colorPoint0.ctrl
+        var or = colorPoint0.fpixel.red
+        var og = colorPoint0.fpixel.green
+        var ob = colorPoint0.fpixel.blue
 
-        while colorScheme[n].ctrl < 99.0 {
-            if (n > 0 &&    // First iteration needed for setting o{ctrl,r,g,b}.
-                ratio < colorScheme[n].ctrl) {
-
-                let frac = (ratio - octrl) / (colorScheme[n].ctrl - octrl)
+        // for remaining iterations:
+        for colorPoint in colorScheme.dropFirst() {
+            if (ratio < colorPoint.ctrl) {
+                let frac = (ratio - octrl) / (colorPoint.ctrl - octrl)
                 return (
-                    r: Self.lerp(a: or, b: colorScheme[n].fpixel.red, frac: frac),
-                    g: Self.lerp(a: og, b: colorScheme[n].fpixel.green, frac: frac),
-                    b: Self.lerp(a: ob, b: colorScheme[n].fpixel.blue, frac: frac)
+                    r: Self.lerp(a: or, b: colorPoint.fpixel.red, frac: frac),
+                    g: Self.lerp(a: og, b: colorPoint.fpixel.green, frac: frac),
+                    b: Self.lerp(a: ob, b: colorPoint.fpixel.blue, frac: frac)
                 )
-            } else {
-                octrl = colorScheme[n].ctrl;
-                or = colorScheme[n].fpixel.red;
-                og = colorScheme[n].fpixel.green;
-                ob = colorScheme[n].fpixel.blue;
+            } else { // reset control-point
+                octrl = colorPoint.ctrl
+                or = colorPoint.fpixel.red
+                og = colorPoint.fpixel.green
+                ob = colorPoint.fpixel.blue
             }
-            n += 1
         }
-
+        // fell through?
         return (1.0, 1.0, 1.0)
     }
 
