@@ -61,20 +61,26 @@ struct AlmondBreadView: View {
                     let width = 800
                     let height = 600
                     let pxl = IntPixel(red: 127, green: 0, blue: 127, alpha: 255)
+
+                    let calculator = Calculator(width: width,
+                                                height: height,
+                                                centerX: -0.7412067031270126,
+                                                centerY: -0.1207678370473447,
+                                                pixelSize: 1.0940668476076224e-11,
+                                                maxIter: 1000,
+                                                progress: $progress)
+
+                    let renderer = Renderer(calculator: calculator,
+                                            scheme: .classic,
+                                            progress: $progress)
+
+                    var pointCounts = [Calculator.PointResult]()
+                    await calculator.calculate(counts: &pointCounts)
+
                     var bytes = [IntPixel](repeating: pxl, count: width*height)
-
-                    var plotter = Plotter(width: width, height: height,
-                                          centerX: -0.7412067031270126, centerY: -0.1207678370473447,
-                                          pixelSize: 1.0940668476076224e-11,
-                                          maxIter: 1000,
-                                          scheme: .classic,
-                                          progress: $progress
-                                          )
-
-                    await plotter.plotImage { (x, y, pixel) in
+                    renderer.plotImage(counts: pointCounts) { (x, y, pixel) in
                         bytes[y * width + x] = IntPixel(r: pixel.0, g: pixel.1, b: pixel.2)
                     }
-
                     bytes.withUnsafeMutableBufferPointer { (b: inout UnsafeMutableBufferPointer<IntPixel>) in
                         let data = Data(buffer: b)
                         let provider = CGDataProvider(data: data as CFData)!
@@ -90,6 +96,7 @@ struct AlmondBreadView: View {
                                                shouldInterpolate: false,
                                                intent: .defaultIntent)
                     }
+
                 }
         } else {
             self.imageView

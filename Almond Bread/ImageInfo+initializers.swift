@@ -16,8 +16,8 @@ extension ImageInfo {
                      pixelWidth: Double,
                      width: Int,
                      height: Int,
-                     colorScheme: Plotter.Scheme) {
-        
+                     colorScheme: Renderer.Scheme) {
+
         self.init(context: context)
 
         self.positionX = x

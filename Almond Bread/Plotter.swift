@@ -118,10 +118,7 @@ struct Plotter {
                     return 1.0
 
                 } else {
-                    let clr1 = palette[ ifc ]
-                    let clr2 = palette[ ifc + 1]
-                    let frac = fcount - ifcf
-                    return Self.lerp(a: clr1, b: clr2, frac: frac)
+                    return Self.lerp(a: palette[ ifc ], b: palette[ ifc + 1], frac: fcount - ifcf)
                 }
             } else {
                 return 1.0
@@ -129,7 +126,7 @@ struct Plotter {
         }
 
         for (i,pr) in results.enumerated() {
-            setPixel(i % self.width, i / self.width, colourFor(ratio: ratio(for: pr), colorScheme: colorScheme))
+            setPixel(i % self.width, i / self.width, colour(for: ratio(for: pr), colorScheme: colorScheme))
         }
     }
 
@@ -148,33 +145,25 @@ struct Plotter {
         }
     }
 
-    func colourFor (ratio _ratio: Double, colorScheme: [ClrControl]) -> (Double, Double, Double) {
+    func colour (for _ratio: Double, colorScheme: [ClrControl]) -> (Double, Double, Double) {
 
-        var ratio = _ratio
-        if (ratio >= 1) { return (0.0, 0.0, 0.0) }     // return white; The set itself is black
-        if (ratio <= 0) { ratio = 0.0001 } // Should never happen w/o FP errors.
+        guard _ratio < 1 else { return (0.0, 0.0, 0.0) }     // return white; The set itself is black
+        let ratio = _ratio <= 0 ? 0.0001 : _ratio            // Should never happen w/o FP errors.
 
         // First iteration needed for setting o{ctrl,r,g,b}.
-        let colorPoint0 = colorScheme.first!
-        var octrl = colorPoint0.ctrl
-        var or = colorPoint0.fpixel.red
-        var og = colorPoint0.fpixel.green
-        var ob = colorPoint0.fpixel.blue
+        var colorPoint0 = colorScheme.first!
 
         // for remaining iterations:
         for colorPoint in colorScheme.dropFirst() {
-            if (ratio < colorPoint.ctrl) {
-                let frac = (ratio - octrl) / (colorPoint.ctrl - octrl)
+            if ratio < colorPoint.ctrl {
+                let frac = (ratio - colorPoint0.ctrl) / (colorPoint.ctrl - colorPoint0.ctrl)
                 return (
-                    r: Self.lerp(a: or, b: colorPoint.fpixel.red, frac: frac),
-                    g: Self.lerp(a: og, b: colorPoint.fpixel.green, frac: frac),
-                    b: Self.lerp(a: ob, b: colorPoint.fpixel.blue, frac: frac)
+                    r: Self.lerp(a: colorPoint0.fpixel.red, b: colorPoint.fpixel.red, frac: frac),
+                    g: Self.lerp(a: colorPoint0.fpixel.green, b: colorPoint.fpixel.green, frac: frac),
+                    b: Self.lerp(a: colorPoint0.fpixel.blue, b: colorPoint.fpixel.blue, frac: frac)
                 )
             } else { // reset control-point
-                octrl = colorPoint.ctrl
-                or = colorPoint.fpixel.red
-                og = colorPoint.fpixel.green
-                ob = colorPoint.fpixel.blue
+                colorPoint0 = colorPoint
             }
         }
         // fell through?
@@ -185,16 +174,17 @@ struct Plotter {
         // Create a histogram of counts
         var hist = [Int](repeating: 0, count: maxIter)
 
-        for n in 0 ..< self.width * self.height {
-            if results[n].count >= maxIter  {
-                continue  // members skew the results
-            }
-            hist[ results[n].count ] += 1
-        }
-
-        // Compute the total, excluding items that reached the escape
+        // Exclude items that reached the escape
         // (i.e. are probably members of the Mandelbrot set) as they skew
         // the colouring.
+        for r in 0 ..< results {
+            if r.count >= maxIter  {
+                continue  // members skew the results
+            }
+            hist[ r.count ] += 1
+        }
+
+        // Compute the total
         let total = hist.reduce(into: 0) { partialResult, h in
             partialResult += h
         }
@@ -250,79 +240,4 @@ struct Plotter {
         }
         progress = 1.0
     }
-
-    /*
-     static void
-     createCountsRange(pos: Position, firstRow: Int, lastRow: Int) {
-
-     assert(firstRow < pos.height && lastRow < pos.height);
-
-     const int dotFreq = 1 + (pos.width * pos.height) / 100;
-
-     int curr = firstRow * pos.width;
-     for (int yy = firstRow; yy <= lastRow; yy++) {
-     for (int xx = 0; xx < pos.width; xx++) {
-     self.results[curr++] = countAt(pos.x, pos.y, xx, yy, pos.pixelSize,
-     pos.maxItr);
-
-     if (curr % dotFreq == 0) {
-     fputs(".", stdout);
-     fflush(stdout);
-     }// if
-     }// for
-     }// for
-     fputs("\n", stdout);
-     }// createCountsRange
-
-     PointResult *
-     createCounts(int nthreads) {
-
-     if (pos.height < 3 * nthreads) {
-     printf("%d threads for %d rows is too low; going single-threaded.",
-     nthreads, pos.height);
-     nthreads = 1;
-     }// if
-
-
-
-
-
-     pthread_t threadlist[nthreads];
-     CountArgs args[nthreads];
-
-     int incr = pos.height / nthreads + 1;
-     for (int firstRow = 0, n = 0; n < nthreads && firstRow < pos.height; n++) {
-     int lastRow = firstRow + incr;
-     lastRow = lastRow < pos.height ? lastRow : pos.height - 1;
-
-     args[n] = (CountArgs){pos, firstRow, lastRow, counts};
-
-     if (nthreads == 1) {
-     createCountsRange(&args[n]);
-     } else {
-     int stat = pthread_create(&threadlist[n], NULL,
-     (void *(*)(void*))createCountsRange,
-     (void*) &args[n]);
-     if (stat) {
-     printf("Error launching thread: %s\n", strerror(stat));
-     exit(1);
-     }// if
-     }
-
-     firstRow += incr;
-     }// for
-
-     if (nthreads == 1) {
-     // No need to join; just return.
-     return counts;
-     }
-
-     for (int n = 0; n < nthreads; n++) {
-     pthread_join(threadlist[n], NULL);
-     }
-
-     return counts;
-     }// createCounts
-     */
-
 }

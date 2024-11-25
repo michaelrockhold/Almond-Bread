@@ -62,9 +62,9 @@
             filePath = "Almond Bread/Plotter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "153"
-            endingLineNumber = "153"
-            landmarkName = "colourFor(ratio:colorScheme:)"
+            startingLineNumber = "151"
+            endingLineNumber = "151"
+            landmarkName = "colour(for:colorScheme:)"
             landmarkType = "7">
             <Locations>
                <Location

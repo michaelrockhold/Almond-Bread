@@ -10,6 +10,8 @@
 		2E9947DF2CF10B36004E6BF1 /* MyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9947DE2CF10B36004E6BF1 /* MyView.swift */; };
 		2E9947E12CF11769004E6BF1 /* AdjustSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9947E02CF11768004E6BF1 /* AdjustSettingsView.swift */; };
 		2E9947E32CF146B8004E6BF1 /* ImageInfo+initializers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9947E22CF146B8004E6BF1 /* ImageInfo+initializers.swift */; };
+		2E9947E52CF3F0CF004E6BF1 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9947E42CF3F0CF004E6BF1 /* Calculator.swift */; };
+		2E9947E72CF3F0E6004E6BF1 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E9947E62CF3F0E6004E6BF1 /* Renderer.swift */; };
 		2EB6F49B2CE9533C0082D354 /* Almond_BreadApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F49A2CE9533C0082D354 /* Almond_BreadApp.swift */; };
 		2EB6F49D2CE9533C0082D354 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F49C2CE9533C0082D354 /* Persistence.swift */; };
 		2EB6F4A02CE9533C0082D354 /* Almond_Bread.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F49E2CE9533C0082D354 /* Almond_Bread.xcdatamodeld */; };
@@ -21,7 +23,6 @@
 		2EB6F4BF2CE953460082D354 /* Almond_BreadUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4BE2CE953460082D354 /* Almond_BreadUITestsLaunchTests.swift */; };
 		2EB6F4CC2CEABBBA0082D354 /* AlmondBreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4CB2CEABBBA0082D354 /* AlmondBreadView.swift */; };
 		2EB6F4CE2CED08EF0082D354 /* Pixel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4CD2CED08EF0082D354 /* Pixel.swift */; };
-		2EB6F4D02CED0CA20082D354 /* Plotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB6F4CF2CED0CA20082D354 /* Plotter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,8 @@
 		2E9947DE2CF10B36004E6BF1 /* MyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyView.swift; sourceTree = "<group>"; };
 		2E9947E02CF11768004E6BF1 /* AdjustSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustSettingsView.swift; sourceTree = "<group>"; };
 		2E9947E22CF146B8004E6BF1 /* ImageInfo+initializers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageInfo+initializers.swift"; sourceTree = "<group>"; };
+		2E9947E42CF3F0CF004E6BF1 /* Calculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calculator.swift; sourceTree = "<group>"; };
+		2E9947E62CF3F0E6004E6BF1 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		2EB6F4972CE9533C0082D354 /* Almond Bread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Almond Bread.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EB6F49A2CE9533C0082D354 /* Almond_BreadApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Almond_BreadApp.swift; sourceTree = "<group>"; };
 		2EB6F49C2CE9533C0082D354 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -126,6 +129,8 @@
 				2EB6F4A62CE953450082D354 /* Preview Content */,
 				2E9947E02CF11768004E6BF1 /* AdjustSettingsView.swift */,
 				2E9947E22CF146B8004E6BF1 /* ImageInfo+initializers.swift */,
+				2E9947E42CF3F0CF004E6BF1 /* Calculator.swift */,
+				2E9947E62CF3F0E6004E6BF1 /* Renderer.swift */,
 			);
 			path = "Almond Bread";
 			sourceTree = "<group>";
@@ -288,11 +293,12 @@
 				2E9947E32CF146B8004E6BF1 /* ImageInfo+initializers.swift in Sources */,
 				2E9947DF2CF10B36004E6BF1 /* MyView.swift in Sources */,
 				2EB6F49B2CE9533C0082D354 /* Almond_BreadApp.swift in Sources */,
+				2E9947E52CF3F0CF004E6BF1 /* Calculator.swift in Sources */,
+				2E9947E72CF3F0E6004E6BF1 /* Renderer.swift in Sources */,
 				2EB6F4CC2CEABBBA0082D354 /* AlmondBreadView.swift in Sources */,
 				2EB6F4A02CE9533C0082D354 /* Almond_Bread.xcdatamodeld in Sources */,
 				2EB6F4A22CE9533C0082D354 /* ContentView.swift in Sources */,
 				2EB6F4CE2CED08EF0082D354 /* Pixel.swift in Sources */,
-				2EB6F4D02CED0CA20082D354 /* Plotter.swift in Sources */,
 				2EB6F49D2CE9533C0082D354 /* Persistence.swift in Sources */,
 				2E9947E12CF11769004E6BF1 /* AdjustSettingsView.swift in Sources */,
 			);
