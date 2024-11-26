@@ -21,8 +21,7 @@ struct ContentView: View {
             List {
                 ForEach(imageInfos) { imageInfo in
                     NavigationLink {
-                        AlmondBreadView()
-//                        MyView()
+                        AlmondBreadView(imageInfo: imageInfo)
                     } label: {
                         Text(imageInfo.name ?? "Untitled")
                     }
@@ -53,6 +52,7 @@ struct ContentView: View {
                               pixelWidth: 1.0940668476076224e-11,
                               width: 800,
                               height: 600,
+                              maxIterations: 1000,
                               colorScheme: .classic)
 
             do {

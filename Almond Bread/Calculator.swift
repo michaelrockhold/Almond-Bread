@@ -23,13 +23,13 @@ struct Calculator {
     private let y: Double
     private let pixelSize: Double
 
-    @Binding private var progress: Double
+    private var viewModel: ImageInfoViewModel
 
     init(width: Int, height: Int,
          centerX:Double, centerY: Double,
          pixelSize: Double,
          maxIter: Int,
-         progress: Binding<Double>
+         viewModel: ImageInfoViewModel
     ) {
         self.width = width
         self.height = height
@@ -38,7 +38,7 @@ struct Calculator {
         self.y = centerY + (Double(height) / 2.0 * pixelSize)
         self.pixelSize = pixelSize
         self.maxIter = maxIter
-        self._progress = progress
+        self.viewModel = viewModel
     }
 
 
@@ -74,11 +74,12 @@ struct Calculator {
         for i in alreadyCalculated ..< total {
             counts.append(countAt(px: i % self.width, py: i / self.width))
             if i % 60 == 0 {
-                progress = Double(i)/Double(total)
+                DispatchQueue.main.async {
+                    viewModel.countGenerationProgress = (Double(i)/Double(total))
+                }
             }
 
             // TODO: check for cancellation
         }
-        progress = 1.0
     }
 }

@@ -67,31 +67,22 @@ struct Renderer {
 
     private let calculator: Calculator
     private let colorScheme: [ClrControl]
-    @Binding private var progress: Double
 
     init(calculator: Calculator,
-         scheme: Renderer.Scheme,
-         progress: Binding<Double>
+         scheme: Renderer.Scheme
     ) {
         self.calculator = calculator
         self.colorScheme = ColorScheme.scheme[scheme.rawValue]
-
-        self._progress = progress
     }
 
-    func plotImage(counts: [Calculator.PointResult], setPixel: (Int, Int, (Double, Double, Double))->Void) {
-
-        progress = 0.0
-        colorImg(
+    func plotImage(counts: [Calculator.PointResult]) -> [Pixel<Double>] {
+        return plotImage(
             counts: counts,
-            palette: calculatePalette(counts: counts),
-            setPixel: setPixel)
-        progress = 1.0
+            palette: calculatePalette(counts: counts))
     }
 
-    private func colorImg(counts: [Calculator.PointResult],
-                          palette: [Double],
-                          setPixel: (Int, Int, (Double, Double, Double))->Void) {
+    private func plotImage(counts: [Calculator.PointResult],
+                           palette: [Double]) -> [Pixel<Double>] {
 
         func ratio(for pr: Calculator.PointResult) -> Double {
             let log2 = log(2.0)
@@ -117,14 +108,14 @@ struct Renderer {
             }
         }
 
-        for (i,pr) in counts.enumerated() {
-            setPixel(i % calculator.width, i / calculator.width, colour(for: ratio(for: pr), colorScheme: colorScheme))
+        return counts.map { pr in
+            colour(for: ratio(for: pr), colorScheme: colorScheme)
         }
     }
 
-    func colour (for _ratio: Double, colorScheme: [ClrControl]) -> (Double, Double, Double) {
+    func colour (for _ratio: Double, colorScheme: [ClrControl]) -> Pixel<Double> {
 
-        guard _ratio < 1 else { return (0.0, 0.0, 0.0) }     // return white; The set itself is black
+        guard _ratio < 1 else { return .white }     // return white; The set itself is black
         let ratio = _ratio <= 0 ? 0.0001 : _ratio            // Should never happen w/o FP errors.
 
         // First iteration needed for setting o{ctrl,r,g,b}.
@@ -133,18 +124,14 @@ struct Renderer {
         // for remaining iterations:
         for colorPoint in colorScheme.dropFirst() {
             if ratio < colorPoint.ctrl {
-                let frac = (ratio - colorPoint0.ctrl) / (colorPoint.ctrl - colorPoint0.ctrl)
-                return (
-                    r: colorPoint0.fpixel.red.lerp(other: colorPoint.fpixel.red, frac: frac),
-                    g: colorPoint0.fpixel.green.lerp(other: colorPoint.fpixel.green, frac: frac),
-                    b: colorPoint0.fpixel.blue.lerp(other: colorPoint.fpixel.blue, frac: frac)
-                )
+                return colorPoint0.fpixel.lerp(colorPoint.fpixel,
+                                               frac: (ratio - colorPoint0.ctrl) / (colorPoint.ctrl - colorPoint0.ctrl))
             } else { // reset control-point
                 colorPoint0 = colorPoint
             }
         }
         // fell through?
-        return (1.0, 1.0, 1.0)
+        return .black
     }
 
     private func calculatePalette (counts: [Calculator.PointResult]) -> [Double] {

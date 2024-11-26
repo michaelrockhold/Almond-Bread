@@ -19,6 +19,7 @@ struct PersistenceController {
                               pixelWidth: 1.0940668476076224e-11,
                               width: 800,
                               height: 600,
+                              maxIterations: 1000,
                               colorScheme: .classic)
         }
         do {
