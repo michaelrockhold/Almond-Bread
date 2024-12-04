@@ -28,69 +28,63 @@ class ImageInfoViewModel: ObservableObject {
         self.imageGenerationProgress = 0.0
 
         self.countDataCancellable = imageInfo.publisher(for: \.countData)
+            .receive(on: DispatchQueue.main)
             .sink() { [weak self] in
                 guard let this = self else { return }
                 print ("ImageInfo.countData now: \($0)")
-                if let data = this.imageInfo.countData {
+                if let countData = this.imageInfo.countData {
                     Task.detached {
-                        await this.updateImageData(maxIterations: Int(imageInfo.maxIterations), countData: data)
+                        var pointCounts = Array<Calculator.PointResult>(repeating: Calculator.PointResult(),
+                                                                        count: countData.count / MemoryLayout<Calculator.PointResult>.stride)
+                        _ = pointCounts.withUnsafeMutableBytes { countData.copyBytes(to: $0) }
+                        await updateImageData(maxIterations: maxIterations, pointCounts: pointCounts)
                     }
                 } else {
                     imageInfo.imageData = nil
                 }
-        }
+            }
 
         self.imageDataCancellable = imageInfo.publisher(for: \.imageData)
+            .receive(on: DispatchQueue.main)
             .sink() { [weak self] in
                 print ("ImageInfo.imageData now: \($0)")
-                guard let this = self else { return }
+                guard let self = self else { return }
 
-                Task.detached {
-                    await this.updateCGImage(this.makeCGImage(from: imageInfo.imageData))
-                }
+                self.renderedImage = self.makeCGImage(from: imageInfo.imageData)
             }
     }
 
-    @MainActor
-    private func updateImageInfoImageData(_ data: Data?) {
-        imageInfo.imageData = data
-    }
-
-    @MainActor
-    private func updateCGImage(_ image: CGImage?) {
-        renderedImage = image
-    }
 
     @MainActor
     private func updateImageInfoCountData(_ data: Data?) {
         imageInfo.countData = data
     }
 
-//    func update() {
-//        let expectedDataSize = Int(imageInfo.imageWidth * imageInfo.imageHeight) * MemoryLayout<Calculator.PointResult>.size
-//        if let countData = imageInfo.countData {
-//            if countData.count == expectedDataSize {
-//                countGenerationProgress = 1.0
-//                countDataReady = true
-//            } else if countData.count < expectedDataSize {
-//                countGenerationProgress = Double(countData.count) / Double(expectedDataSize)
-//                countDataReady = false
-//            } else { // error
-//                countGenerationProgress = 0.0
-//                countDataReady = false
-//                imageInfo.countData = nil
-//            }
-//        } else {
-//            countGenerationProgress = 0.0
-//            countDataReady = false
-//        }
-//
-//        if countDataReady {
-//            self.updateImageData(maxIterations: Int(imageInfo.maxIterations), countData: imageInfo.countData!)
-//        } else {
-//            self.updateCountData()
-//        }
-//    }
+    //    func update() {
+    //        let expectedDataSize = Int(imageInfo.imageWidth * imageInfo.imageHeight) * MemoryLayout<Calculator.PointResult>.size
+    //        if let countData = imageInfo.countData {
+    //            if countData.count == expectedDataSize {
+    //                countGenerationProgress = 1.0
+    //                countDataReady = true
+    //            } else if countData.count < expectedDataSize {
+    //                countGenerationProgress = Double(countData.count) / Double(expectedDataSize)
+    //                countDataReady = false
+    //            } else { // error
+    //                countGenerationProgress = 0.0
+    //                countDataReady = false
+    //                imageInfo.countData = nil
+    //            }
+    //        } else {
+    //            countGenerationProgress = 0.0
+    //            countDataReady = false
+    //        }
+    //
+    //        if countDataReady {
+    //            self.updateImageData(maxIterations: Int(imageInfo.maxIterations), countData: imageInfo.countData!)
+    //        } else {
+    //            self.updateCountData()
+    //        }
+    //    }
 
     func makeCalculator() -> Calculator {
         return Calculator(width: Int(imageInfo.imageWidth),
@@ -107,26 +101,18 @@ class ImageInfoViewModel: ObservableObject {
         makeCalculator().calculate(counts: &pointCounts)
 
         let cdata = pointCounts.withUnsafeBufferPointer { buffer in
-                return Data(buffer: buffer)
-            }
-            countGenerationProgress = 1.0
-            countDataReady = true
+            return Data(buffer: buffer)
+        }
+        countGenerationProgress = 1.0
+        countDataReady = true
         Task.detached {  [cdata] in
             await self.updateImageInfoCountData(cdata)
         }
-            do {
-                try imageInfo.managedObjectContext?.save()
-            } catch {
-                fatalError()
-            }
-    }
-
-    func updateImageData(maxIterations: Int, countData: Data) async {
-        var pointCounts = Array<Calculator.PointResult>(repeating: Calculator.PointResult(),
-                                                        count: countData.count / MemoryLayout<Calculator.PointResult>.stride)
-        _ = pointCounts.withUnsafeMutableBytes { countData.copyBytes(to: $0) }
-
-        await updateImageData(maxIterations: maxIterations, pointCounts: pointCounts)
+        do {
+            try imageInfo.managedObjectContext?.save()
+        } catch {
+            fatalError()
+        }
     }
 
     func updateImageData(maxIterations: Int, pointCounts: [Calculator.PointResult]) async {
@@ -138,9 +124,9 @@ class ImageInfoViewModel: ObservableObject {
         intPixels.withUnsafeBufferPointer { (b: UnsafeBufferPointer<IntPixel>) in
             idata = Data(buffer: b)
         }
-        await self.updateImageInfoImageData(idata)
-        try? imageInfo.managedObjectContext?.save()
 
+        imageInfo.imageData = idata
+        try? imageInfo.managedObjectContext?.save()
         imageGenerationProgress = 1.0
     }
 
@@ -152,18 +138,18 @@ class ImageInfoViewModel: ObservableObject {
         guard let provider = CGDataProvider(data: data as CFData) else {
             return nil
         }
-        
+
         return CGImage(width: Int(imageInfo.imageWidth),
-                                   height: Int(imageInfo.imageHeight),
-                                   bitsPerComponent: IntPixel.componentBitSize,
-                                   bitsPerPixel: IntPixel.bitSize,
-                                   bytesPerRow: Int(imageInfo.imageWidth) * IntPixel.byteSize,
-                                   space: CGColorSpace(name: CGColorSpace.sRGB)!,
-                                   bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue),
-                                   provider: provider,
-                                   decode: nil,
-                                   shouldInterpolate: false,
-                                   intent: .defaultIntent)
+                       height: Int(imageInfo.imageHeight),
+                       bitsPerComponent: IntPixel.componentBitSize,
+                       bitsPerPixel: IntPixel.bitSize,
+                       bytesPerRow: Int(imageInfo.imageWidth) * IntPixel.byteSize,
+                       space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                       bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue),
+                       provider: provider,
+                       decode: nil,
+                       shouldInterpolate: false,
+                       intent: .defaultIntent)
 
     }
 
@@ -178,7 +164,7 @@ class ImageInfoViewModel: ObservableObject {
 
     func apply(settings: AdjustSettingsView.SettingsViewModel,
                changes: AdjustSettingsView.SettingsChangeOptions) {
-
+        
         if changes.contains(.cosmetic) {
             imageInfo.name = settings.name
         }
