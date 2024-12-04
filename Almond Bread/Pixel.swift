@@ -44,6 +44,10 @@ extension Pixel<Double> {
                              blue: blue.lerp(other: other.blue, frac: frac),
                              alpha: 1.0)
     }
+
+    init(doublePixel: Pixel<Double>) {
+        self.init(red: doublePixel.red, green: doublePixel.green, blue: doublePixel.blue, alpha: doublePixel.alpha)
+    }
 }
 
 typealias IntPixel = Pixel<UInt8>
@@ -67,5 +71,4 @@ extension Pixel<UInt8> {
 
         self.init(red: clrInt(doublePixel.red), green: clrInt(doublePixel.green), blue: clrInt(doublePixel.blue), alpha: clrInt(doublePixel.alpha))
     }
-
 }

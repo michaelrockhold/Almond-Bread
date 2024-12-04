@@ -20,15 +20,15 @@ struct AlmondBreadView: View {
     var body: some View {
 
         ZStack {
-            switch (imageInfoViewModel.countDataReady, imageInfoViewModel.imageDataReady) {
+            switch (imageInfoViewModel.countDataReady, imageInfoViewModel.renderedImage) {
             case (false, _):
                 ProgressView(value: imageInfoViewModel.countGenerationProgress)
                     .progressViewStyle(.circular)
                     .padding(20)
-            case (true, true):
-                ImageDataReadyView(imageInfoViewModel: imageInfoViewModel)
-            case (true, false):
+            case (true, nil):
                 ImageDataNotReadyView()
+            default:
+                ImageDataReadyView(imageInfoViewModel: imageInfoViewModel)
             }
         }
         .toolbar {
@@ -39,17 +39,29 @@ struct AlmondBreadView: View {
             }
         }
         .sheet(isPresented: $isShowingSheet) {
-            AdjustSettingsView(name: imageInfoViewModel.imageInfo.name ?? "") { newName in
-                if newName != imageInfoViewModel.imageInfo.name {
-                    imageInfoViewModel.countDataReady = false
-                    imageInfoViewModel.imageInfo.name = newName
-                    try? imageInfoViewModel.imageInfo.managedObjectContext?.save()
-                }
-            }
+            AdjustSettingsView(imageInfoViewModel: imageInfoViewModel)
         }
         .onAppear() {
             isShowingSheet = true
         }
+//        .task {
+//            let countDataCancellable = imageInfoViewModel.imageInfo.publisher(for: \ImageInfo.countData)
+//                .sink() {
+//                    print ("ImageInfo.countData now: \($0)")
+//                    imageInfoViewModel.update()
+//            }
+//
+//
+//            await Task.yield()
+//
+//            while true {
+//                if Task.isCancelled {
+//                    print("CANCELLED")
+//                    break
+//                }
+//                try? await Task.sleep(nanoseconds: 5_000_000_000)
+//            }
+//        }
 
 
 

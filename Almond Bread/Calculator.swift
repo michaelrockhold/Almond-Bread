@@ -42,7 +42,7 @@ struct Calculator {
     }
 
 
-    func calculate(counts: inout [PointResult]) async {
+    func calculate(counts: inout [PointResult]) {
 
         func countAt (px: Int, py: Int) -> PointResult {
             var zx = 0.0

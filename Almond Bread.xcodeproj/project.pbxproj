@@ -120,24 +120,24 @@
 		2EB6F4992CE9533C0082D354 /* Almond Bread */ = {
 			isa = PBXGroup;
 			children = (
+				2EB6F49E2CE9533C0082D354 /* Almond_Bread.xcdatamodeld */,
 				2EB6F49A2CE9533C0082D354 /* Almond_BreadApp.swift */,
-				2EB6F4CD2CED08EF0082D354 /* Pixel.swift */,
+				2E9947E22CF146B8004E6BF1 /* ImageInfo+initializers.swift */,
+				2E9947E82CF50051004E6BF1 /* ImageDataReadyView.swift */,
 				2EB6F49C2CE9533C0082D354 /* Persistence.swift */,
 				2EB6F4A12CE9533C0082D354 /* ContentView.swift */,
 				2EB6F4CB2CEABBBA0082D354 /* AlmondBreadView.swift */,
-				2E9947DE2CF10B36004E6BF1 /* CountDataNotReadyView.swift */,
-				2EB6F4A32CE953450082D354 /* Assets.xcassets */,
-				2EB6F4A52CE953450082D354 /* Almond_Bread.entitlements */,
-				2EB6F4A92CE953450082D354 /* Info.plist */,
-				2EB6F49E2CE9533C0082D354 /* Almond_Bread.xcdatamodeld */,
-				2EB6F4A62CE953450082D354 /* Preview Content */,
 				2E9947E02CF11768004E6BF1 /* AdjustSettingsView.swift */,
-				2E9947E22CF146B8004E6BF1 /* ImageInfo+initializers.swift */,
+				2EB6F4CD2CED08EF0082D354 /* Pixel.swift */,
 				2E9947E42CF3F0CF004E6BF1 /* Calculator.swift */,
 				2E9947E62CF3F0E6004E6BF1 /* Renderer.swift */,
-				2E9947E82CF50051004E6BF1 /* ImageDataReadyView.swift */,
+				2E9947DE2CF10B36004E6BF1 /* CountDataNotReadyView.swift */,
 				2E9947EA2CF5015B004E6BF1 /* ImageDataNotReadyView.swift */,
 				2E9947EC2CF51255004E6BF1 /* ImageInfoViewModel.swift */,
+				2EB6F4A92CE953450082D354 /* Info.plist */,
+				2EB6F4A52CE953450082D354 /* Almond_Bread.entitlements */,
+				2EB6F4A32CE953450082D354 /* Assets.xcassets */,
+				2EB6F4A62CE953450082D354 /* Preview Content */,
 			);
 			path = "Almond Bread";
 			sourceTree = "<group>";

@@ -30,4 +30,13 @@ extension ImageInfo {
         self.colorScheme = Int16(colorScheme.rawValue)
     }
 
+    var scheme: Renderer.Scheme {
+        get {
+            return Renderer.Scheme(rawValue: Int(self.colorScheme))!
+        }
+        set {
+            self.colorScheme = Int16(newValue.rawValue)
+        }
+    }
+
 }
