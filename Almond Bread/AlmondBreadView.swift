@@ -9,7 +9,6 @@ import SwiftUI
 
 struct AlmondBreadView: View {
 
-    //    @State var cgImage: CGImage? = nil
     @State private var isShowingSheet = false
     @StateObject var imageInfoViewModel: ImageInfoViewModel
 
@@ -20,15 +19,14 @@ struct AlmondBreadView: View {
     var body: some View {
 
         ZStack {
-            switch (imageInfoViewModel.countDataReady, imageInfoViewModel.renderedImage) {
-            case (false, _):
-                ProgressView(value: imageInfoViewModel.countGenerationProgress)
-                    .progressViewStyle(.circular)
-                    .padding(20)
-            case (true, nil):
-                ImageDataNotReadyView()
-            default:
+            if imageInfoViewModel.countGenerationProgress >= 1.0 && imageInfoViewModel.imageGenerationProgress >= 1.0 {
+                
                 ImageDataReadyView(imageInfoViewModel: imageInfoViewModel)
+                
+            } else {
+
+                ImageDataInProgressView(imageInfoViewModel: imageInfoViewModel)
+
             }
         }
         .toolbar {

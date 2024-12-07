@@ -38,5 +38,9 @@ extension ImageInfo {
             self.colorScheme = Int16(newValue.rawValue)
         }
     }
+    
+    var expectedSize: Int {
+        return Int(imageWidth * imageHeight) * MemoryLayout<Calculator.PointResult>.size
+    }
 
 }

@@ -14,17 +14,17 @@ class ImageInfoViewModel: ObservableObject {
     let imageInfo: ImageInfo
 
     @Published var countGenerationProgress: Double
-    @Published var countDataReady: Bool
     @Published var imageGenerationProgress: Double
-    @Published var renderedImage: CGImage?
+
+    var renderedImage: CGImage?
 
     private var countDataCancellable: AnyCancellable!
     private var imageDataCancellable: AnyCancellable!
+    private var renderSettingsCancellable: AnyCancellable!
 
     init(imageInfo: ImageInfo) {
         self.imageInfo = imageInfo
         self.countGenerationProgress = 0.0
-        self.countDataReady = false
         self.imageGenerationProgress = 0.0
 
         self.countDataCancellable = imageInfo.publisher(for: \.countData)
@@ -32,15 +32,51 @@ class ImageInfoViewModel: ObservableObject {
             .sink() { [weak self] in
                 guard let this = self else { return }
                 print ("ImageInfo.countData now: \($0)")
+                
                 if let countData = this.imageInfo.countData {
-                    Task.detached {
-                        var pointCounts = Array<Calculator.PointResult>(repeating: Calculator.PointResult(),
-                                                                        count: countData.count / MemoryLayout<Calculator.PointResult>.stride)
-                        _ = pointCounts.withUnsafeMutableBytes { countData.copyBytes(to: $0) }
-                        await updateImageData(maxIterations: maxIterations, pointCounts: pointCounts)
+                    // there is countData; it is either enough, in which case rendering may begin, or its not, in which case we finish calculation
+                    if countData.count < this.imageInfo.expectedSize { // finish calculations
+                        
+                        Task.detached {
+                            countGenerationProgress = 0.0
+                            
+                            var pointCounts = Array<Calculator.PointResult>(repeating: Calculator.PointResult(),
+                                                                            count: countData.count / MemoryLayout<Calculator.PointResult>.stride)
+                            _ = pointCounts.withUnsafeMutableBytes { countData.copyBytes(to: $0) }
+                            self?.makeCalculator().calculate(counts: &pointCounts)
+                            
+                            pointCounts.withUnsafeBufferPointer { bp in
+                                self?.imageInfo.countData = Data(buffer: bp)
+                            }
+                        }
+                    } else { // proceed with image rendering
+                        
+                        Task.detached {
+                            var pointCounts = Array<Calculator.PointResult>(repeating: Calculator.PointResult(),
+                                                                            count: countData.count / MemoryLayout<Calculator.PointResult>.stride)
+                            _ = pointCounts.withUnsafeMutableBytes { countData.copyBytes(to: $0) }
+                            await updateImageData(maxIterations: Int(self!.imageInfo.maxIterations), pointCounts: pointCounts)
+                        }
                     }
+                    
                 } else {
-                    imageInfo.imageData = nil
+                    // countData is nil
+                    countGenerationProgress = 0.0
+                    self?.makeCalculator().calculate(counts: &<#T##[Calculator.PointResult]#>)
+                }
+            }
+        
+        self.renderSettingsCancellable = imageInfo.publisher(for: \.colorScheme)
+            .receive(on: DispatchQueue.main)
+            .sink() {_ in
+                self.imageInfo.imageData = nil
+                self.imageGenerationProgress = 0.0
+                guard let data = self.imageInfo.countData else {
+                    fatalError("NO COUNT DATA")
+                }
+
+                Task.detached {
+                    await self.updateImageData(maxIterations: Int(imageInfo.maxIterations), countData: data)
                 }
             }
 
@@ -53,8 +89,13 @@ class ImageInfoViewModel: ObservableObject {
                 self.renderedImage = self.makeCGImage(from: imageInfo.imageData)
             }
     }
-
-
+    
+//    @MainActor
+//    private func updateImageInfoImageData(_ data: Data?) {
+//        imageInfo.imageData = data
+//    }
+    
+    
     @MainActor
     private func updateImageInfoCountData(_ data: Data?) {
         imageInfo.countData = data
@@ -104,7 +145,6 @@ class ImageInfoViewModel: ObservableObject {
             return Data(buffer: buffer)
         }
         countGenerationProgress = 1.0
-        countDataReady = true
         Task.detached {  [cdata] in
             await self.updateImageInfoCountData(cdata)
         }
@@ -114,7 +154,15 @@ class ImageInfoViewModel: ObservableObject {
             fatalError()
         }
     }
-
+    
+    func updateImageData(maxIterations: Int, countData: Data) async {
+        var pointCounts = Array<Calculator.PointResult>(repeating: Calculator.PointResult(),
+                                                        count: countData.count / MemoryLayout<Calculator.PointResult>.stride)
+        _ = pointCounts.withUnsafeMutableBytes { countData.copyBytes(to: $0) }
+        
+        await updateImageData(maxIterations: maxIterations, pointCounts: pointCounts)
+    }
+    
     func updateImageData(maxIterations: Int, pointCounts: [Calculator.PointResult]) async {
 
         let intPixels = Renderer(maxIterations: maxIterations, scheme: .classic)
@@ -165,27 +213,32 @@ class ImageInfoViewModel: ObservableObject {
     func apply(settings: AdjustSettingsView.SettingsViewModel,
                changes: AdjustSettingsView.SettingsChangeOptions) {
         
+        var resetCalculation = false
+        var resetRendering = false
+
         if changes.contains(.cosmetic) {
             imageInfo.name = settings.name
         }
-        if changes.contains(.rendering) {
-            imageInfo.scheme = settings.colorScheme
+        
+        switch (changes.contains(.dimensional), changes.contains(.rendering)) {
+        case (true, true):
             imageInfo.imageData = nil
-        }
-        if changes.contains(.dimensional) {
-            imageInfo.positionX = settings.x
-            imageInfo.positionY = settings.y
-
-            imageInfo.imageWidth = Int32(settings.width)
-            imageInfo.imageHeight = Int32(settings.height)
-
-            imageInfo.pixelWidth = settings.pixelWidth
-
-            imageInfo.maxIterations = Int32(settings.maxIterations)
-
-            imageInfo.countData = nil // force these to be updated
+            imageGenerationProgress = 0.0
+            imageInfo.countData = nil
+            countGenerationProgress = 0.0
+            
+        case (true, false):
             imageInfo.imageData = nil
-            countDataReady = false
+            imageGenerationProgress = 0.0
+            imageInfo.countData = nil
+            countGenerationProgress = 0.0
+
+        case (false, true):
+            imageInfo.imageData = nil
+            imageGenerationProgress = 0.0
+            
+        case (false, false):
+            break
         }
 
         saveImageInfo()
