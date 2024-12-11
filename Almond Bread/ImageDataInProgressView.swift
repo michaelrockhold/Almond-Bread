@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ImageDataInProgressView: View {
-    @State public var imageInfoViewModel: ImageInfoViewModel
+    @ObservedObject public var imageInfoViewModel: ImageInfoViewModel
 
     var body: some View {
         HStack {
@@ -16,7 +16,7 @@ struct ImageDataInProgressView: View {
                 .progressViewStyle(.circular)
                 .padding(20)
             
-            ProgressView(value: imageInfoViewModel.imageGenerationProgress)
+            ProgressView(value: imageInfoViewModel.renderingProgress)
                 .progressViewStyle(.circular)
                 .padding(20)
         }

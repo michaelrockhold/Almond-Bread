@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ImageDataReadyView: View {
-    @State var imageInfoViewModel: ImageInfoViewModel
+    @ObservedObject var imageInfoViewModel: ImageInfoViewModel
 
     var body: some View {
         if let image = imageInfoViewModel.renderedImage {

@@ -77,10 +77,23 @@ struct AdjustSettingsView: View {
     @State private var settings: SettingsViewModel = SettingsViewModel()
     @State private var originalSettings: SettingsViewModel = SettingsViewModel()
 
+    let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+
     var body: some View {
         Form {
             Section {
                 TextField("Name of image", text: $settings.name)
+                TextField("X", value: $settings.x, format: .number.notation(.scientific).precision(.significantDigits(16)))
+                TextField("Y", value: $settings.y, format: .number.notation(.scientific).precision(.significantDigits(16)))
+                TextField("Pixel Width", value: $settings.pixelWidth, format: .number.notation(.scientific).precision(.significantDigits(16)))
+
+                TextField("Image Width", value: $settings.width, format: .number)
+                TextField("Image Height", value: $settings.height, format: .number)
+                TextField("Maximum Iterations", value: $settings.maxIterations, format: .number)
                 Picker("Color Scheme", selection: $settings.colorScheme) {
                     ForEach(Renderer.Scheme.allCases) { option in
                         Text(String(describing: option))
@@ -93,15 +106,6 @@ struct AdjustSettingsView: View {
                 #endif
             }
 
-//            Section("Write a review") {
-//                TextEditor(text: $review)
-//
-//                Picker("Rating", selection: $rating) {
-//                    ForEach(0..<6) {
-//                        Text(String($0))
-//                    }
-//                }
-//            }
 
             Section {
                 HStack {
@@ -111,10 +115,13 @@ struct AdjustSettingsView: View {
 
                     Button("Save", role: .destructive) {
                         let changes = settings.compare(to: originalSettings)
-                        imageInfoViewModel.apply(settings: settings,
-                                                 changes: changes)
+                        Task {
+                            await imageInfoViewModel.apply(settings: settings,
+                                                     changes: changes)
+                        }
                         dismiss()
                     }
+                    .disabled(settings.compare(to: originalSettings).isEmpty)
                 }
             }
         }

@@ -16,7 +16,17 @@ extension Double {
     }
 }
 
-struct Renderer {
+actor Renderer {
+
+    struct Settings {
+        let maxIterations: Int
+        let scheme: Scheme
+
+        var colorScheme: [ClrControl] {
+            return ColorScheme.scheme[scheme.rawValue]
+        }
+    }
+
     public enum Scheme: Int, CaseIterable, Identifiable, CustomStringConvertible {
         case classic = 0
         case wikipedia = 1
@@ -77,29 +87,24 @@ struct Renderer {
         }
     }
 
-    private let maxIterations: Int
-    private let colorScheme: [ClrControl]
-
-    init(maxIterations: Int,
-         scheme: Renderer.Scheme
-    ) {
-        self.maxIterations = maxIterations
-        self.colorScheme = ColorScheme.scheme[scheme.rawValue]
-    }
-
-    func plotImage(counts: [Calculator.PointResult]) -> [Pixel<UInt8>] {
+    func plotImage(settings: Settings, counts: [Calculator.PointResult], progressHandler: @escaping (Int)->Void) -> [Pixel<UInt8>] {
         return plotImage(
+            settings: settings,
             counts: counts,
-            palette: calculatePalette(counts: counts))
+            palette: calculatePalette(settings: settings, counts: counts),
+            progressHandler: progressHandler
+        )
     }
 
-    private func plotImage(counts: [Calculator.PointResult],
-                           palette: [Double]) -> [Pixel<UInt8>] {
+    private func plotImage(settings: Settings,
+                           counts: [Calculator.PointResult],
+                           palette: [Double],
+                           progressHandler: @escaping (Int)->Void) -> [Pixel<UInt8>] {
 
         func ratio(for pr: Calculator.PointResult) -> Double {
             let log2 = log(2.0)
 
-            if pr.count < maxIterations  {
+            if pr.count < settings.maxIterations  {
                 let log_zn = log(pr.radiusSquared) / 2.0
                 let nu = log(log_zn / log2) / log2
                 let fcount = Double(pr.count) + 1.0 - nu
@@ -109,7 +114,7 @@ struct Renderer {
                 // Sanity check: we may have exceeded the check if
                 // we've gotten too far from the set.  In that case,
                 // color it white:
-                if ifc < 0 || ifc >= maxIterations -  1 {
+                if ifc < 0 || ifc >= settings.maxIterations -  1 {
                     return 1.0
 
                 } else {
@@ -120,41 +125,48 @@ struct Renderer {
             }
         }
 
-        return counts.map { pr in
-            return Pixel<UInt8>(doublePixel: colour(for: ratio(for: pr), colorScheme: colorScheme))
-        }
-    }
+        func colour(for _ratio: Double, i: Int) -> Pixel<Double> {
 
-    func colour(for _ratio: Double, colorScheme: [ClrControl]) -> Pixel<Double> {
-
-        guard _ratio < 1 else { return .white }     // return white; The set itself is black
-        let ratio = _ratio <= 0 ? 0.0001 : _ratio            // Should never happen w/o FP errors.
-
-        // First iteration needed for setting o{ctrl,r,g,b}.
-        var colorPoint0 = colorScheme.first!
-
-        // for remaining iterations:
-        for colorPoint in colorScheme.dropFirst() {
-            if ratio < colorPoint.ctrl {
-                return colorPoint0.fpixel.lerp(colorPoint.fpixel,
-                                               frac: (ratio - colorPoint0.ctrl) / (colorPoint.ctrl - colorPoint0.ctrl))
-            } else { // reset control-point
-                colorPoint0 = colorPoint
+            guard _ratio < 1 else { return .white }     // return white; The set itself is black
+            defer {
+                if i % 60 == 0 {
+                    progressHandler(i)
+                }
             }
+            let ratio = _ratio <= 0 ? 0.0001 : _ratio            // Should never happen w/o FP errors.
+
+            // First iteration needed for setting o{ctrl,r,g,b}.
+            var colorPoint0 = settings.colorScheme.first!
+
+            // for remaining iterations:
+            for colorPoint in settings.colorScheme.dropFirst() {
+                if ratio < colorPoint.ctrl {
+                    return colorPoint0.fpixel.lerp(colorPoint.fpixel,
+                                                   frac: (ratio - colorPoint0.ctrl) / (colorPoint.ctrl - colorPoint0.ctrl))
+                } else { // reset control-point
+                    colorPoint0 = colorPoint
+                }
+            }
+            // fell through?
+            return .black
         }
-        // fell through?
-        return .black
+
+        return counts.enumerated().map { (i,pr) in
+            return Pixel<UInt8>(doublePixel: colour(for: ratio(for: pr), i: i))
+        }
     }
 
-    private func calculatePalette (counts: [Calculator.PointResult]) -> [Double] {
+
+
+    private func calculatePalette (settings: Settings, counts: [Calculator.PointResult]) -> [Double] {
         // Create a histogram of counts
-        var hist = [Int](repeating: 0, count: maxIterations)
+        var hist = [Int](repeating: 0, count: settings.maxIterations)
 
         // Exclude items that reached the escape
         // (i.e. are probably members of the Mandelbrot set) as they skew
         // the colouring.
         for pc in counts {
-            if pc.count >= maxIterations  {
+            if pc.count >= settings.maxIterations  {
                 continue  // members skew the results
             }
             hist[ pc.count ] += 1

@@ -14,191 +14,103 @@ class ImageInfoViewModel: ObservableObject {
     let imageInfo: ImageInfo
 
     @Published var countGenerationProgress: Double
-    @Published var imageGenerationProgress: Double
+    @Published var renderingProgress: Double = 0.0
+    @Published var renderedImage: CGImage? = nil
 
-    var renderedImage: CGImage?
-
-    private var countDataCancellable: AnyCancellable!
-    private var imageDataCancellable: AnyCancellable!
-    private var renderSettingsCancellable: AnyCancellable!
+    private let calculator = Calculator()
 
     init(imageInfo: ImageInfo) {
         self.imageInfo = imageInfo
-        self.countGenerationProgress = 0.0
-        self.imageGenerationProgress = 0.0
+        countGenerationProgress = 0.0
 
-        self.countDataCancellable = imageInfo.publisher(for: \.countData)
-            .receive(on: DispatchQueue.main)
-            .sink() { [weak self] in
-                guard let this = self else { return }
-                print ("ImageInfo.countData now: \($0)")
-                
-                if let countData = this.imageInfo.countData {
-                    // there is countData; it is either enough, in which case rendering may begin, or its not, in which case we finish calculation
-                    if countData.count < this.imageInfo.expectedSize { // finish calculations
-                        
-                        Task.detached {
-                            countGenerationProgress = 0.0
-                            
-                            var pointCounts = Array<Calculator.PointResult>(repeating: Calculator.PointResult(),
-                                                                            count: countData.count / MemoryLayout<Calculator.PointResult>.stride)
-                            _ = pointCounts.withUnsafeMutableBytes { countData.copyBytes(to: $0) }
-                            self?.makeCalculator().calculate(counts: &pointCounts)
-                            
-                            pointCounts.withUnsafeBufferPointer { bp in
-                                self?.imageInfo.countData = Data(buffer: bp)
-                            }
-                        }
-                    } else { // proceed with image rendering
-                        
-                        Task.detached {
-                            var pointCounts = Array<Calculator.PointResult>(repeating: Calculator.PointResult(),
-                                                                            count: countData.count / MemoryLayout<Calculator.PointResult>.stride)
-                            _ = pointCounts.withUnsafeMutableBytes { countData.copyBytes(to: $0) }
-                            await updateImageData(maxIterations: Int(self!.imageInfo.maxIterations), pointCounts: pointCounts)
-                        }
-                    }
-                    
-                } else {
-                    // countData is nil
-                    countGenerationProgress = 0.0
-                    self?.makeCalculator().calculate(counts: &<#T##[Calculator.PointResult]#>)
-                }
-            }
-        
-        self.renderSettingsCancellable = imageInfo.publisher(for: \.colorScheme)
-            .receive(on: DispatchQueue.main)
-            .sink() {_ in
-                self.imageInfo.imageData = nil
-                self.imageGenerationProgress = 0.0
-                guard let data = self.imageInfo.countData else {
-                    fatalError("NO COUNT DATA")
-                }
-
-                Task.detached {
-                    await self.updateImageData(maxIterations: Int(imageInfo.maxIterations), countData: data)
-                }
-            }
-
-        self.imageDataCancellable = imageInfo.publisher(for: \.imageData)
-            .receive(on: DispatchQueue.main)
-            .sink() { [weak self] in
-                print ("ImageInfo.imageData now: \($0)")
-                guard let self = self else { return }
-
-                self.renderedImage = self.makeCGImage(from: imageInfo.imageData)
-            }
-    }
-    
-//    @MainActor
-//    private func updateImageInfoImageData(_ data: Data?) {
-//        imageInfo.imageData = data
-//    }
-    
-    
-    @MainActor
-    private func updateImageInfoCountData(_ data: Data?) {
-        imageInfo.countData = data
-    }
-
-    //    func update() {
-    //        let expectedDataSize = Int(imageInfo.imageWidth * imageInfo.imageHeight) * MemoryLayout<Calculator.PointResult>.size
-    //        if let countData = imageInfo.countData {
-    //            if countData.count == expectedDataSize {
-    //                countGenerationProgress = 1.0
-    //                countDataReady = true
-    //            } else if countData.count < expectedDataSize {
-    //                countGenerationProgress = Double(countData.count) / Double(expectedDataSize)
-    //                countDataReady = false
-    //            } else { // error
-    //                countGenerationProgress = 0.0
-    //                countDataReady = false
-    //                imageInfo.countData = nil
-    //            }
-    //        } else {
-    //            countGenerationProgress = 0.0
-    //            countDataReady = false
-    //        }
-    //
-    //        if countDataReady {
-    //            self.updateImageData(maxIterations: Int(imageInfo.maxIterations), countData: imageInfo.countData!)
-    //        } else {
-    //            self.updateCountData()
-    //        }
-    //    }
-
-    func makeCalculator() -> Calculator {
-        return Calculator(width: Int(imageInfo.imageWidth),
-                          height: Int(imageInfo.imageHeight),
-                          centerX: imageInfo.positionX,
-                          centerY: imageInfo.positionY,
-                          pixelSize: imageInfo.pixelWidth,
-                          maxIter: Int(imageInfo.maxIterations),
-                          viewModel: self)
-    }
-
-    func updateCountData() {
-        var pointCounts = [Calculator.PointResult]()
-        makeCalculator().calculate(counts: &pointCounts)
-
-        let cdata = pointCounts.withUnsafeBufferPointer { buffer in
-            return Data(buffer: buffer)
+        let settingsVM = AdjustSettingsView.SettingsViewModel(imageInfo: imageInfo)
+        Task {
+            await apply(settings: settingsVM, changes: [])
         }
-        countGenerationProgress = 1.0
-        Task.detached {  [cdata] in
-            await self.updateImageInfoCountData(cdata)
+
+    }
+
+    var calculatorSettings: Calculator.Settings {
+        get {
+            Calculator.Settings(width: Int(imageInfo.imageWidth),
+                                height: Int(imageInfo.imageHeight),
+                                centerX: imageInfo.positionX,
+                                centerY: imageInfo.positionY,
+                                pixelSize: imageInfo.pixelWidth,
+                                maxIter: Int(imageInfo.maxIterations))
         }
-        do {
-            try imageInfo.managedObjectContext?.save()
-        } catch {
-            fatalError()
+        set {
+            imageInfo.imageWidth = Int32(newValue.width)
+            imageInfo.imageHeight = Int32(newValue.height)
+            imageInfo.positionX = newValue.x
+            imageInfo.positionY = newValue.y
+            imageInfo.pixelWidth = newValue.pixelSize
+            imageInfo.maxIterations = Int32(newValue.maxIter)
         }
     }
-    
-    func updateImageData(maxIterations: Int, countData: Data) async {
+
+    var rendererSettings: Renderer.Settings {
+        get {
+            Renderer.Settings(maxIterations: Int(imageInfo.maxIterations),
+                              scheme: imageInfo.scheme)
+        }
+        set {
+            imageInfo.maxIterations = Int32(newValue.maxIterations)
+            imageInfo.scheme = newValue.scheme
+        }
+    }
+
+
+    func updateCountData(settings: Calculator.Settings,
+                         _ progressHandler: @escaping (Int)->Void,
+                         onComplete: @escaping (Data, Calculator.Settings)->Void) async {
+
+            // start calculating
+            let total = imageInfo.expectedSize
+            await self.calculator.calculate(settings: settings) { p in
+                progressHandler(p)
+
+            } onComplete: { (calculatedPoints, settings) in
+                calculatedPoints.withUnsafeBufferPointer { bp in
+                    onComplete(Data(buffer: bp), settings)
+                }
+            }
+    }
+
+    func updateImageData(settings: Renderer.Settings,
+                         countData: Data,
+                         _ progressHandler: @escaping (Int)->Void,
+                         onComplete: @escaping (Data, Renderer.Settings)->Void) async {
+
+        progressHandler(0)
         var pointCounts = Array<Calculator.PointResult>(repeating: Calculator.PointResult(),
                                                         count: countData.count / MemoryLayout<Calculator.PointResult>.stride)
         _ = pointCounts.withUnsafeMutableBytes { countData.copyBytes(to: $0) }
-        
-        await updateImageData(maxIterations: maxIterations, pointCounts: pointCounts)
-    }
-    
-    func updateImageData(maxIterations: Int, pointCounts: [Calculator.PointResult]) async {
 
-        let intPixels = Renderer(maxIterations: maxIterations, scheme: .classic)
-            .plotImage(counts: pointCounts)
+        let intPixels = await Renderer()
+            .plotImage(settings: settings, counts: pointCounts, progressHandler: progressHandler)
 
-        var idata: Data? = nil
-        intPixels.withUnsafeBufferPointer { (b: UnsafeBufferPointer<IntPixel>) in
-            idata = Data(buffer: b)
+        let idata = intPixels.withUnsafeBufferPointer { (b: UnsafeBufferPointer<IntPixel>) in
+           return Data(buffer: b)
         }
 
-        imageInfo.imageData = idata
-        try? imageInfo.managedObjectContext?.save()
-        imageGenerationProgress = 1.0
+        onComplete(idata, settings)
     }
 
-    private func makeCGImage(from imageData: Data?) -> CGImage? {
-        guard let data = imageData else {
-            return nil
-        }
+    func updateImage(data: Data, width: Int, height: Int, _ onComplete: @escaping (CGImage)->Void) async {
 
-        guard let provider = CGDataProvider(data: data as CFData) else {
-            return nil
-        }
-
-        return CGImage(width: Int(imageInfo.imageWidth),
-                       height: Int(imageInfo.imageHeight),
-                       bitsPerComponent: IntPixel.componentBitSize,
-                       bitsPerPixel: IntPixel.bitSize,
-                       bytesPerRow: Int(imageInfo.imageWidth) * IntPixel.byteSize,
-                       space: CGColorSpace(name: CGColorSpace.sRGB)!,
-                       bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue),
-                       provider: provider,
-                       decode: nil,
-                       shouldInterpolate: false,
-                       intent: .defaultIntent)
-
+        let provider = CGDataProvider(data: data as CFData)!
+        onComplete(CGImage(width: Int(width),
+                           height: Int(height),
+                           bitsPerComponent: IntPixel.componentBitSize,
+                           bitsPerPixel: IntPixel.bitSize,
+                           bytesPerRow: Int(width) * IntPixel.byteSize,
+                           space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                           bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue),
+                           provider: provider,
+                           decode: nil,
+                           shouldInterpolate: false,
+                           intent: .defaultIntent)!)
     }
 
     private func saveImageInfo() {
@@ -211,34 +123,73 @@ class ImageInfoViewModel: ObservableObject {
     }
 
     func apply(settings: AdjustSettingsView.SettingsViewModel,
-               changes: AdjustSettingsView.SettingsChangeOptions) {
-        
-        var resetCalculation = false
-        var resetRendering = false
+               changes: AdjustSettingsView.SettingsChangeOptions) async {
+
+        func onMain(_ fn: @escaping ()->Void) { DispatchQueue.main.async { fn() } }
+
+        func reportCalculation(progress: Int) {
+            onMain { self.countGenerationProgress = Double(progress) / Double(settings.width * settings.height) }
+        }
+        func reportCalculationDone() {
+            onMain { self.countGenerationProgress = 1.0 }
+        }
+        func reportRendering(progress: Int) {
+            onMain { self.renderingProgress = Double(progress) / Double(settings.width * settings.height) }
+        }
+        func reportRenderingDone() {
+            onMain { self.renderingProgress = 1.0 }
+        }
+
+        let newCalculatorSettings = Calculator.Settings(width: settings.width,
+                                                        height: settings.height,
+                                                        centerX: settings.x,
+                                                        centerY: settings.y,
+                                                        pixelSize: settings.pixelWidth,
+                                                        maxIter: settings.maxIterations)
+        let newRendererSettings = Renderer.Settings(maxIterations: settings.maxIterations,
+                                                    scheme: settings.colorScheme)
 
         if changes.contains(.cosmetic) {
             imageInfo.name = settings.name
         }
-        
-        switch (changes.contains(.dimensional), changes.contains(.rendering)) {
-        case (true, true):
-            imageInfo.imageData = nil
-            imageGenerationProgress = 0.0
-            imageInfo.countData = nil
-            countGenerationProgress = 0.0
-            
-        case (true, false):
-            imageInfo.imageData = nil
-            imageGenerationProgress = 0.0
-            imageInfo.countData = nil
-            countGenerationProgress = 0.0
 
-        case (false, true):
-            imageInfo.imageData = nil
-            imageGenerationProgress = 0.0
-            
-        case (false, false):
-            break
+        do {
+            if changes.contains(.dimensional) || self.imageInfo.countData == nil {
+                reportRendering(progress: 0)
+                await self.updateCountData(settings: newCalculatorSettings) { progress in
+                    reportCalculation(progress: progress)
+                } onComplete: { (data, settings) in
+                    self.imageInfo.countData = data
+                    self.calculatorSettings = settings
+                    reportCalculationDone()
+                }
+            } else {
+                reportCalculationDone()
+            }
+
+            if changes.contains(.rendering) || changes.contains(.dimensional) || self.imageInfo.imageData == nil {
+
+                await self.updateImageData(settings: newRendererSettings,
+                                           countData: self.imageInfo.countData!
+                ) { progress in
+                    reportRendering(progress: progress)
+
+                } onComplete: { (data, settings) in
+                    self.rendererSettings = settings
+                    self.imageInfo.imageData = data
+                    reportRenderingDone()
+                }
+            } else {
+                reportRenderingDone()
+            }
+
+            await self.updateImage(data: self.imageInfo.imageData!,
+                                       width: Int(imageInfo.imageWidth),
+                                       height: Int(imageInfo.imageHeight)) { img in
+                onMain { self.renderedImage = img }
+            }
+        } catch {
+            fatalError("TODO: handle this properly")
         }
 
         saveImageInfo()

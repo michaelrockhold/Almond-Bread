@@ -19,7 +19,7 @@ struct AlmondBreadView: View {
     var body: some View {
 
         ZStack {
-            if imageInfoViewModel.countGenerationProgress >= 1.0 && imageInfoViewModel.imageGenerationProgress >= 1.0 {
+            if imageInfoViewModel.countGenerationProgress >= 1.0 && imageInfoViewModel.renderingProgress >= 1.0 {
                 
                 ImageDataReadyView(imageInfoViewModel: imageInfoViewModel)
                 
@@ -39,9 +39,9 @@ struct AlmondBreadView: View {
         .sheet(isPresented: $isShowingSheet) {
             AdjustSettingsView(imageInfoViewModel: imageInfoViewModel)
         }
-        .onAppear() {
-            isShowingSheet = true
-        }
+//        .onAppear() {
+//            isShowingSheet = true
+//        }
 //        .task {
 //            let countDataCancellable = imageInfoViewModel.imageInfo.publisher(for: \ImageInfo.countData)
 //                .sink() {
