@@ -32,8 +32,8 @@ actor Calculator {
             self.width = width
             self.height = height
 
-            self.x = centerX - (Double(width) / 2.0 * pixelSize)
-            self.y = centerY + (Double(height) / 2.0 * pixelSize)
+            self.x = centerX // - (Double(width) / 2.0 * pixelSize)
+            self.y = centerY // + (Double(height) / 2.0 * pixelSize)
             self.pixelSize = pixelSize
             self.maxIter = maxIter
         }
