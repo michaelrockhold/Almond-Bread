@@ -8,9 +8,11 @@
 import SwiftUI
 import CoreData
 
+// TODO: handle the thrown errors more gracefully, most situations should be
+// totally recoverable.
+
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \ImageInfo.name, ascending: true)],
         animation: .default)

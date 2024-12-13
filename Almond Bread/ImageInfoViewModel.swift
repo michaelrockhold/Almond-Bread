@@ -32,18 +32,16 @@ class ImageInfoViewModel: ObservableObject {
 
     var calculatorSettings: Calculator.Settings {
         get {
-            Calculator.Settings(width: Int(imageInfo.imageWidth),
-                                height: Int(imageInfo.imageHeight),
-                                centerX: imageInfo.positionX,
-                                centerY: imageInfo.positionY,
-                                pixelSize: imageInfo.pixelWidth,
-                                maxIter: Int(imageInfo.maxIterations))
+            Calculator.Settings(imageDimensions: Calculator.Settings.ImageDimensions(width: Int(imageInfo.imageWidth), height: Int(imageInfo.imageHeight)),
+                                center: Calculator.Settings.Point(x: imageInfo.positionX, y: imageInfo.positionY),
+                                maxIter: Int(imageInfo.maxIterations),
+                                pixelSize: imageInfo.pixelWidth)
         }
         set {
-            imageInfo.imageWidth = Int32(newValue.width)
-            imageInfo.imageHeight = Int32(newValue.height)
-            imageInfo.positionX = newValue.x
-            imageInfo.positionY = newValue.y
+            imageInfo.imageWidth = Int32(newValue.imageDimensions.width)
+            imageInfo.imageHeight = Int32(newValue.imageDimensions.height)
+            imageInfo.positionX = newValue.center.x
+            imageInfo.positionY = newValue.center.y
             imageInfo.pixelWidth = newValue.pixelSize
             imageInfo.maxIterations = Int32(newValue.maxIter)
         }
@@ -60,41 +58,28 @@ class ImageInfoViewModel: ObservableObject {
         }
     }
 
-
-    func updateCountData(settings: Calculator.Settings,
-                         _ progressHandler: @escaping (Int)->Void,
-                         onComplete: @escaping (Data, Calculator.Settings)->Void) async {
-
-            // start calculating
-            let total = imageInfo.expectedSize
-            await self.calculator.calculate(settings: settings) { p in
-                progressHandler(p)
-
-            } onComplete: { (calculatedPoints, settings) in
-                calculatedPoints.withUnsafeBufferPointer { bp in
-                    onComplete(Data(buffer: bp), settings)
-                }
-            }
-    }
-
     func updateImageData(settings: Renderer.Settings,
                          countData: Data,
-                         _ progressHandler: @escaping (Int)->Void,
-                         onComplete: @escaping (Data, Renderer.Settings)->Void) async {
+                         _ progressHandler: @escaping (Int)->Void) async -> Result<(Data, Renderer.Settings), Error> {
 
         progressHandler(0)
         var pointCounts = Array<Calculator.PointResult>(repeating: Calculator.PointResult(),
                                                         count: countData.count / MemoryLayout<Calculator.PointResult>.stride)
         _ = pointCounts.withUnsafeMutableBytes { countData.copyBytes(to: $0) }
 
-        let intPixels = await Renderer()
+        let rendering = await Renderer()
             .plotImage(settings: settings, counts: pointCounts, progressHandler: progressHandler)
 
-        let idata = intPixels.withUnsafeBufferPointer { (b: UnsafeBufferPointer<IntPixel>) in
-           return Data(buffer: b)
+        switch rendering {
+        case .success(let pixels):
+            let idata = pixels.withUnsafeBufferPointer { (b: UnsafeBufferPointer<IntPixel>) in
+               return Data(buffer: b)
+            }
+            return .success((idata, settings))
+            
+        case .failure(let e):
+            return .failure(e)
         }
-
-        onComplete(idata, settings)
     }
 
     func updateImage(data: Data, width: Int, height: Int, _ onComplete: @escaping (CGImage)->Void) async {
@@ -140,12 +125,10 @@ class ImageInfoViewModel: ObservableObject {
             onMain { self.renderingProgress = 1.0 }
         }
 
-        let newCalculatorSettings = Calculator.Settings(width: settings.width,
-                                                        height: settings.height,
-                                                        centerX: settings.x,
-                                                        centerY: settings.y,
-                                                        pixelSize: settings.pixelWidth,
-                                                        maxIter: settings.maxIterations)
+        let newCalculatorSettings = Calculator.Settings(imageDimensions: Calculator.Settings.ImageDimensions(width: settings.width, height: settings.height),
+                                                        center: Calculator.Settings.Point(x: settings.x, y: settings.y),
+                                                        maxIter: settings.maxIterations,
+                                                        pixelSize: settings.pixelWidth)
         let newRendererSettings = Renderer.Settings(maxIterations: settings.maxIterations,
                                                     scheme: settings.colorScheme)
 
@@ -156,12 +139,22 @@ class ImageInfoViewModel: ObservableObject {
         do {
             if changes.contains(.dimensional) || self.imageInfo.countData == nil {
                 reportRendering(progress: 0)
-                await self.updateCountData(settings: newCalculatorSettings) { progress in
+                let calculation = await self.calculator.calculate(settings: newCalculatorSettings) { progress in
                     reportCalculation(progress: progress)
-                } onComplete: { (data, settings) in
-                    self.imageInfo.countData = data
-                    self.calculatorSettings = settings
+                }
+                                
+                switch calculation {
+                case .success(let result):
+                    
+                    self.calculatorSettings = result.1
+                    result.0.withUnsafeBufferPointer { bp in
+                        self.imageInfo.countData = Data(buffer: bp)
+                    }
                     reportCalculationDone()
+
+                case .failure(let error):
+                    // TODO: handle this unusual thing, or make Failure=Never
+                    break
                 }
             } else {
                 reportCalculationDone()
@@ -169,15 +162,20 @@ class ImageInfoViewModel: ObservableObject {
 
             if changes.contains(.rendering) || changes.contains(.dimensional) || self.imageInfo.imageData == nil {
 
-                await self.updateImageData(settings: newRendererSettings,
-                                           countData: self.imageInfo.countData!
-                ) { progress in
-                    reportRendering(progress: progress)
-
-                } onComplete: { (data, settings) in
-                    self.rendererSettings = settings
-                    self.imageInfo.imageData = data
+                reportRendering(progress: 0)
+                let imageRenderingResult = await self.updateImageData(settings: newRendererSettings,
+                                                                      countData: self.imageInfo.countData!) {
+                    reportRendering(progress: $0)
+                }
+                switch imageRenderingResult {
+                case .success(let good):
+                    self.rendererSettings = good.1
+                    self.imageInfo.imageData = good.0
                     reportRenderingDone()
+                    
+                case .failure(let bad):
+                    // TODO: handle this unusual thing, or make Failure=Never
+                    break
                 }
             } else {
                 reportRenderingDone()

@@ -18,6 +18,8 @@ extension Double {
 
 actor Renderer {
 
+    typealias Rendering = ([IntPixel], Settings)
+
     struct Settings {
         let maxIterations: Int
         let scheme: Scheme
@@ -87,7 +89,9 @@ actor Renderer {
         }
     }
 
-    func plotImage(settings: Settings, counts: [Calculator.PointResult], progressHandler: @escaping (Int)->Void) -> [Pixel<UInt8>] {
+    func plotImage(settings: Settings,
+                   counts: [Calculator.PointResult],
+                   progressHandler: @escaping (Int)->Void) -> Result<[IntPixel], Error> {
         return plotImage(
             settings: settings,
             counts: counts,
@@ -99,7 +103,7 @@ actor Renderer {
     private func plotImage(settings: Settings,
                            counts: [Calculator.PointResult],
                            palette: [Double],
-                           progressHandler: @escaping (Int)->Void) -> [Pixel<UInt8>] {
+                           progressHandler: @escaping (Int)->Void) -> Result<[IntPixel], Error> {
 
         func ratio(for pr: Calculator.PointResult) -> Double {
             let log2 = log(2.0)
@@ -151,9 +155,9 @@ actor Renderer {
             return .black
         }
 
-        return counts.enumerated().map { (i,pr) in
+        return .success(counts.enumerated().map { (i,pr) in
             return Pixel<UInt8>(doublePixel: colour(for: ratio(for: pr), i: i))
-        }
+        })
     }
 
 

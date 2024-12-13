@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct AlmondBreadView: View {
-
+    
     @State private var isShowingSheet = false
+    @State private var isShowingExporter = false
     @StateObject var imageInfoViewModel: ImageInfoViewModel
 
     init(imageInfo: ImageInfo) {
@@ -35,33 +37,28 @@ struct AlmondBreadView: View {
                     isShowingSheet.toggle()
                 }
             }
+            ToolbarItem(placement: .automatic) {
+                Button("Export Image", systemImage: "square.and.arrow.up") {
+                    isShowingExporter = true
+                }
+            }
         }
         .sheet(isPresented: $isShowingSheet) {
             AdjustSettingsView(imageInfoViewModel: imageInfoViewModel)
         }
+        .fileExporter(isPresented: $isShowingExporter, document: ImageInfoFileDocument(imageInfo: self.imageInfoViewModel), contentType: .jpeg) { result in
+            
+            switch result {
+            case .success(let url):
+                print("Saved to \(url)")
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+
 //        .onAppear() {
 //            isShowingSheet = true
 //        }
-//        .task {
-//            let countDataCancellable = imageInfoViewModel.imageInfo.publisher(for: \ImageInfo.countData)
-//                .sink() {
-//                    print ("ImageInfo.countData now: \($0)")
-//                    imageInfoViewModel.update()
-//            }
-//
-//
-//            await Task.yield()
-//
-//            while true {
-//                if Task.isCancelled {
-//                    print("CANCELLED")
-//                    break
-//                }
-//                try? await Task.sleep(nanoseconds: 5_000_000_000)
-//            }
-//        }
-
-
 
         //            Image(size: CGSize(width: 640.0, height: 480.0)) { (gc: inout GraphicsContext) in
         //                let p = Path(CGRect(x: 0, y: 0, width: 640, height: 480))
@@ -76,3 +73,38 @@ struct AlmondBreadView: View {
 //#Preview {
 //    AlmondBreadView()
 //}
+
+
+struct ImageInfoFileDocument: FileDocument {
+    enum ImageInfoFileDocumentError: Error {
+        case notReady
+        case cannotCreateData
+    }
+    
+    static var readableContentTypes = [UTType.jpeg]
+        
+    let imageInfo: ImageInfoViewModel
+    
+    init(configuration: FileDocument.ReadConfiguration) throws {
+        // this is never called, because we don't read these in
+        fatalError("INTERNAL ERROR")
+    }
+
+    init(imageInfo: ImageInfoViewModel) {
+        self.imageInfo = imageInfo
+    }
+    
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        // this is the whole point of FileDocument, for our purposes
+        
+        guard let cgImage = imageInfo.renderedImage else {
+            throw ImageInfoFileDocumentError.notReady
+        }
+        let cicontext = CIContext()
+        let ciimage = CIImage(cgImage: cgImage)
+        guard let data = cicontext.jpegRepresentation(of: ciimage, colorSpace: ciimage.colorSpace!) else {
+            throw ImageInfoFileDocumentError.cannotCreateData
+        }
+        return FileWrapper(regularFileWithContents: data)
+    }
+}

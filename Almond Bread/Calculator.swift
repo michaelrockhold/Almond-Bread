@@ -10,37 +10,31 @@ import SwiftUI
 
 actor Calculator {
 
+    public enum CalculatorError: Error {
+        case cancelled
+    }
+    
     typealias CompletionHandler = ([PointResult])->Void
     typealias CalculationTask = Task<Void, Error>
     typealias ProgressFn = (Int)->Void
     typealias OuterCompletionHandler = ([PointResult], Settings)->Void
     typealias InnerCompletionHandler = ([PointResult], Settings)->Void
 
+    typealias Calculation = ([PointResult], Settings)
+    
     struct Settings: Equatable {
-        let width: Int
-        let height: Int
+        struct ImageDimensions: Equatable {
+            let width: Int
+            let height: Int
+        }
+        struct Point: Equatable {
+            let x: Double
+            let y: Double
+        }
+        let imageDimensions: ImageDimensions
+        let center: Point
         let maxIter: Int
-        let x: Double
-        let y: Double
         let pixelSize: Double
-
-        init(width: Int, height: Int,
-             centerX:Double, centerY: Double,
-             pixelSize: Double,
-             maxIter: Int
-        ) {
-            self.width = width
-            self.height = height
-
-            self.x = centerX // - (Double(width) / 2.0 * pixelSize)
-            self.y = centerY // + (Double(height) / 2.0 * pixelSize)
-            self.pixelSize = pixelSize
-            self.maxIter = maxIter
-        }
-
-        static var zero: Settings {
-            return Settings(width: 0, height: 0, centerX: 0.0, centerY: 0.0, pixelSize: 0.0, maxIter: 0)
-        }
     }
 
     struct PointResult {
@@ -48,26 +42,27 @@ actor Calculator {
         var radiusSquared: Double = 0.0
     }
 
-    func calculate(settings: Settings, progressHandler: @escaping ProgressFn, onComplete: @escaping OuterCompletionHandler) async {
+    func calculate(settings: Settings, progressHandler: @escaping ProgressFn) async -> Result<Calculation, Error> {
 
+        let arraySize = settings.imageDimensions.height * settings.imageDimensions.width
+        var counts = [PointResult](repeating: PointResult(), count: arraySize)
 
-        await _calculate(settings: settings, range: 0..<(settings.height * settings.width),
-                                             progressHandler: progressHandler) { (points, settings) in
-            // trampoline because we will shortly be adding more tasks
-            onComplete(points, settings)
-        }
+        return await _calculate(settings: settings,
+                                range: 0..<arraySize,
+                                counts: &counts,
+                                progressHandler: progressHandler)
     }
 
     private func _calculate(settings: Settings,
                             range: Range<Int>,
-                            progressHandler: @escaping ProgressFn,
-                            onComplete: @escaping InnerCompletionHandler) async {
+                            counts: inout [PointResult],
+                            progressHandler: @escaping ProgressFn) async -> Result<Calculation, Error> {
 
         @Sendable func countAt (px: Int, py: Int) -> PointResult {
             var zx = 0.0
             var zy = 0.0
-            let x0 = settings.x + Double(px) * settings.pixelSize
-            let y0 = settings.y - Double(py) * settings.pixelSize
+            let x0 = settings.center.x + Double(px) * settings.pixelSize
+            let y0 = settings.center.y - Double(py) * settings.pixelSize
 
             var zxzx = 0.0
             var zyzy = 0.0
@@ -87,21 +82,20 @@ actor Calculator {
             return PointResult(count: settings.maxIter, radiusSquared: zxzx + zyzy)
         }
 
-        let stride = settings.width
-        var counts = [PointResult]()
+        let stride = settings.imageDimensions.width
 
         progressHandler(range.lowerBound)
 
         for i in range.lowerBound ..< range.upperBound {
-            counts.append(countAt(px: i % stride, py: i / stride))
+            counts[i] = countAt(px: i % stride, py: i / stride)
             if i % 60 == 0 {
                 progressHandler(i)
             }
             if Task.isCancelled {
-                return
+                return .failure(CalculatorError.cancelled)
             }
         }
         progressHandler(range.upperBound)
-        onComplete(counts, settings)
+        return .success(Calculation(counts, settings))
     }
 }
