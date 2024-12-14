@@ -37,11 +37,7 @@ struct AlmondBreadView: View {
                     isShowingSheet.toggle()
                 }
             }
-            ToolbarItem(placement: .automatic) {
-                Button("Export Image", systemImage: "square.and.arrow.up") {
-                    isShowingExporter = true
-                }
-            }
+
         }
         .sheet(isPresented: $isShowingSheet) {
             AdjustSettingsView(imageInfoViewModel: imageInfoViewModel)
@@ -55,18 +51,6 @@ struct AlmondBreadView: View {
                 print(error.localizedDescription)
             }
         }
-
-//        .onAppear() {
-//            isShowingSheet = true
-//        }
-
-        //            Image(size: CGSize(width: 640.0, height: 480.0)) { (gc: inout GraphicsContext) in
-        //                let p = Path(CGRect(x: 0, y: 0, width: 640, height: 480))
-        //                gc.fill(p, with: .color(.red))
-        //                gc.draw(Text("Hello, World"), in: CGRect(x: 0, y: 0, width: 640, height: 480))
-        //            }
-        //            .resizable()
-        //            .aspectRatio(contentMode: .fit)
     }
 }
 
@@ -96,13 +80,7 @@ struct ImageInfoFileDocument: FileDocument {
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
         // this is the whole point of FileDocument, for our purposes
-        
-        guard let cgImage = imageInfo.renderedImage else {
-            throw ImageInfoFileDocumentError.notReady
-        }
-        let cicontext = CIContext()
-        let ciimage = CIImage(cgImage: cgImage)
-        guard let data = cicontext.jpegRepresentation(of: ciimage, colorSpace: ciimage.colorSpace!) else {
+        guard let data = imageInfo.jpegData else {
             throw ImageInfoFileDocumentError.cannotCreateData
         }
         return FileWrapper(regularFileWithContents: data)

@@ -182,13 +182,11 @@ actor Renderer {
         }
 
         // Now, create the palette
-        var palette = [Double]()
         var hue = 0.0
-        for h in hist  {
-            palette.append(hue)
+        return hist.map { h in
+            let lastHue = hue
             hue += Double(h) / Double(total)
+            return lastHue
         }
-
-        return palette
     }
 }

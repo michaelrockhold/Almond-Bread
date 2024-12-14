@@ -8,6 +8,7 @@
 import Foundation
 import CoreGraphics
 import Combine
+import CoreImage
 
 class ImageInfoViewModel: ObservableObject {
 
@@ -192,4 +193,14 @@ class ImageInfoViewModel: ObservableObject {
 
         saveImageInfo()
     }
+    
+    var jpegData: Data? {
+        guard let cgImage = renderedImage else {
+            return nil
+        }
+        let cicontext = CIContext()
+        let ciimage = CIImage(cgImage: cgImage)
+        return cicontext.jpegRepresentation(of: ciimage, colorSpace: ciimage.colorSpace!)
+    }
+    
 }
