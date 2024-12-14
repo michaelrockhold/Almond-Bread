@@ -177,16 +177,15 @@ actor Renderer {
         }
 
         // Compute the total
-        let total = hist.reduce(into: 0) { partialResult, h in
-            partialResult += h
-        }
+        let total = hist.reduce(0, +)
 
         // Now, create the palette
-        var hue = 0.0
+        var prevHue = 0.0
         return hist.map { h in
-            let lastHue = hue
-            hue += Double(h) / Double(total)
-            return lastHue
+            let hue = prevHue + Double(h) / Double(total)
+            prevHue = hue
+            return hue
         }
+
     }
 }

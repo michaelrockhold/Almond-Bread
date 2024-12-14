@@ -47,14 +47,19 @@ actor Calculator {
         let arraySize = settings.imageDimensions.height * settings.imageDimensions.width
         var counts = [PointResult](repeating: PointResult(), count: arraySize)
 
+        var progress = 0
         return await _calculate(settings: settings,
-                                range: 0..<arraySize,
-                                counts: &counts,
-                                progressHandler: progressHandler)
+                                xrange: 0..<settings.imageDimensions.width,
+                                yrange: 0..<settings.imageDimensions.height,
+                                counts: &counts) { incr in
+            progress += incr
+            progressHandler(progress)
+        }
     }
 
     private func _calculate(settings: Settings,
-                            range: Range<Int>,
+                            xrange: Range<Int>,
+                            yrange: Range<Int>,
                             counts: inout [PointResult],
                             progressHandler: @escaping ProgressFn) async -> Result<Calculation, Error> {
 
@@ -82,20 +87,25 @@ actor Calculator {
             return PointResult(count: settings.maxIter, radiusSquared: zxzx + zyzy)
         }
 
-        let stride = settings.imageDimensions.width
+        var counter = 0
+        progressHandler(counter)
 
-        progressHandler(range.lowerBound)
-
-        for i in range.lowerBound ..< range.upperBound {
-            counts[i] = countAt(px: i % stride, py: i / stride)
-            if i % 60 == 0 {
-                progressHandler(i)
-            }
-            if Task.isCancelled {
-                return .failure(CalculatorError.cancelled)
+        for c in xrange.lowerBound ..< xrange.upperBound {
+            for r in yrange.lowerBound ..< yrange.upperBound {
+                counts[r * settings.imageDimensions.width + c] = countAt(px: c, py: r)
+                counter += 1
+                if counter % 60 == 0 {
+                    progressHandler(counter)
+                    counter = 0
+                }
+                if Task.isCancelled {
+                    return .failure(CalculatorError.cancelled)
+                }
             }
         }
-        progressHandler(range.upperBound)
+        if counter > 0 {
+            progressHandler(counter)
+        }
         return .success(Calculation(counts, settings))
     }
 }
