@@ -49,9 +49,9 @@ struct ContentView: View {
     private func addItem() {
         withAnimation {
             let _ = ImageInfo(context: viewContext,
-                              x: -0.7412067031270126,
-                              y: -0.1207678370473447,
-                              pixelWidth: 1.0940668476076224e-11,
+                              x: -7.500000000000000E-1,
+                              y: 0,
+                              pixelWidth: 4.200000000000000E-3,
                               width: 800,
                               height: 600,
                               maxIterations: 1000,

@@ -62,37 +62,47 @@ actor Calculator {
                             yrange: Range<Int>,
                             counts: inout [PointResult],
                             progressHandler: @escaping ProgressFn) async -> Result<Calculation, Error> {
+        
+        let offsetX = settings.center.x - Double(settings.imageDimensions.width) * settings.pixelSize / 2.0
+        let offsetY = settings.center.y + Double(settings.imageDimensions.height) * settings.pixelSize / 2.0
+        
+        let threshold = Double(1<<16) // 65K
 
-        @Sendable func countAt (px: Int, py: Int) -> PointResult {
-            var zx = 0.0
-            var zy = 0.0
-            let x0 = settings.center.x + Double(px) * settings.pixelSize
-            let y0 = settings.center.y - Double(py) * settings.pixelSize
-
-            var zxzx = 0.0
-            var zyzy = 0.0
-            for c in 0 ..< settings.maxIter {
-                zxzx = zx*zx
-                zyzy = zy*zy
-
-                if zxzx + zyzy >= Double(1<<16) {
-                    return PointResult(count: c, radiusSquared: zxzx + zyzy)
-                }
-
-                let xtmp = zxzx - zyzy + x0
-                zy = 2*zx*zy + y0
-                zx = xtmp
+        func translateCoord(x: Int, y: Int) -> (Double, Double) {
+            return (offsetX + Double(x) * settings.pixelSize,
+                    offsetY - Double(y) * settings.pixelSize)
+        }
+        
+        @Sendable func iterate(x0: Double, y0: Double) -> PointResult {
+            
+            func update(zx: Double, zy: Double, zx2: Double, zy2: Double) -> (Double, Double) {
+                return (zx2 - zy2 + x0, 2 * zx * zy + y0)
             }
 
-            return PointResult(count: settings.maxIter, radiusSquared: zxzx + zyzy)
+            var zx = 0.0
+            var zy = 0.0
+            for c in 0 ..< settings.maxIter {
+                let zx2 = zx * zx
+                let zy2 = zy * zy
+                let radius2 = zx2 + zy2
+
+                if radius2 >= threshold {
+                    return PointResult(count: c, radiusSquared: radius2)
+                }
+                    
+                (zx, zy) = update(zx: zx, zy: zy, zx2: zx2, zy2: zy2)
+            }
+            // fall through; this may be in the set
+            return PointResult(count: settings.maxIter)
         }
 
         var counter = 0
         progressHandler(counter)
 
-        for c in xrange.lowerBound ..< xrange.upperBound {
-            for r in yrange.lowerBound ..< yrange.upperBound {
-                counts[r * settings.imageDimensions.width + c] = countAt(px: c, py: r)
+        for x in xrange.lowerBound ..< xrange.upperBound {
+            for y in yrange.lowerBound ..< yrange.upperBound {
+                let (x0, y0) = translateCoord(x: x, y: y)
+                counts[y * settings.imageDimensions.width + x] = iterate(x0: x0, y0: y0)
                 counter += 1
                 if counter % 60 == 0 {
                     progressHandler(counter)
